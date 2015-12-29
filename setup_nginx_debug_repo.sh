@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PATH="/home/lotusinterworks.internal/yahyas/nginx_debug_repos_conf/"
+PATH="/home/lotusinterworks.internal/codeDeploy/nginx_debug_repos_conf/"
 #PATH="/home/lotusinterworks.internal/yahyas/nginx_debug_repos_conf/"
 
 REPO=$1;

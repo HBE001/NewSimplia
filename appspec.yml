@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
     - source: /
-      destination: /home/lotusinterworks.internal/yahyas/simpliadeployment
+      destination: /home/lotusinterworks.internal/codeDeploy/NewSimplia
       overwrite: yes
 hooks:
   BeforeInstall:

@@ -1,7 +1,0 @@
-{
-  "name": "GenerateGDNFormPanel",
-  "js": "generategdnformpanel/main.js",
-  "dependencies": [
-    "basicformdatatablepanel"
-  ]
-}

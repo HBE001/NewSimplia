@@ -1,7 +1,0 @@
-{
-  "name": "SaveMogopakPanel",
-  "js": "savemogopakpanel/main.js",
-  "dependencies": [
-    "basicformdatatablepanel"
-  ]
-}

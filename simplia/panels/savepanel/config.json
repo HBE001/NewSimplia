@@ -1,7 +1,0 @@
-{
-  "name": "SavePanel",
-  "js": "savepanel/main.js",
-  "dependencies": [
-    "basicformdatatablepanel"
-  ]
-}

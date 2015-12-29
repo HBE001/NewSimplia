@@ -1,7 +1,0 @@
-{
-  "name": "MysqlDatatablePanel",
-  "js": "mysqldatatablepanel/main.js",
-  "dependencies": [
-    "basicdatabasedatatablepanel"
-  ]
-}

@@ -1,7 +1,0 @@
-{
-  "name": "LargeTextPanel",
-  "js": "largetextpanel/main.js",
-  "dependencies": [
-    "basicformdatatablepanel"
-  ]
-}
