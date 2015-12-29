@@ -1,0 +1,11 @@
+{
+  "name": "SqliteDatatablePanel",
+  "js": "sqlitedatatablepanel/main.js",
+  "dependencies": [
+    "basicdatabasedatatablepanel",
+    "settingsdatatablepanel",
+    "addformdatatablepanel",
+    "editformdatatablepanel",
+    "viewformdatatablepanel"
+  ]
+}

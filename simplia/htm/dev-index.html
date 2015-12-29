@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Register Accounts </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+
+    <link rel="stylesheet" href="/css/pure.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/ui.fancytree.css">
+    <link rel="stylesheet" href="/css/marketing.css">
+    <link rel="stylesheet" href="/css/font-awesome.css">
+
+    <style type="text/css">
+
+        .error { color:  red !important; width: 50em !important; text-align:left !important; padding-left:5em !important; }
+
+
+    </style>
+
+    <!-- Fav and touch icons
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="http://getbootstrap.com/2.3.2/assets/ico/favicon.png">-->
+    <script src="/js/jquery.min.js" type="text/javascript"></script>
+    <script src="/js/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="/js/jquery.smoothDivScroll.js" type="text/javascript" ></script><!-- Stock Ticker smooth div js -->
+    <script src="/js/jquery.slimscroll.js" type="text/javascript" ></script><!-- Stock slim scrollerjs -->
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/jquery.fancytree.js" type="text/javascript"></script> <!-- Fancy tree javascript -->
+    <script src="/js/jquery.autocomplete.js" type="text/javascript"></script> <!-- Auto complete javascript -->
+
+    <script type="text/javascript" src="/js/ext/geoip2.js"></script>
+    <script type="text/javascript" src="/js/ext/yui-3.18.js"></script>
+    <script type="text/javascript" src="/js/paneleventmanager.js"></script>
+    <script type="text/javascript" src="/js/ui/screenmanager.js"></script>
+    <script type="text/javascript" src="/js/ui/panelloader.js"></script>
+    <script type="text/javascript" src="/js/basicpanel.js"></script>
+    <script type="text/javascript" src="/js/formpanel.js"></script>
+    <script type="text/javascript" src="/js/lotuswebsockets.js"></script>
+    <script type="text/javascript" src="/js/communicationmanager.js"></script>
+
+    <script type="text/javascript" src="/js/init.js"></script>
+
+</head>
+
+<body class="yui3-skin-sam" >
+<div id="registerPanel"  >
+    <div id="message" class="alert-success"> </div>
+    <div class="header-title"><span class="alignleft">
+        <span class="alignleft mainpanel_option "/>&#9776;&nbsp;&nbsp;  </span>
+        <span>
+        Register
+            <span class="alignleft">
+                <span class="alignleft mainpanel_option"/>
+            </span>
+        </span>
+        <span class="panelsalignright" />  &#9776;&nbsp;&nbsp;</span>
+    </div>
+    <div class="yui3-widget-bd displyshow">
+        <div id="loginpanel-inner">
+            <div class="l-box ">
+            </div>
+        </div>
+    </div>
+</div> <!-- /container -->
+
+<img id="cursor-img" src="/img/cursor.png" style="display:none;"/>
+<div id="panels"></div>
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script>
+    var errorCount = 0;
+
+    $('#authform').validate({
+        rules: {
+            email: {
+                required: true,
+                email: true,
+                maxlength: 254
+            },
+            password: {
+                minlength: 6,
+                required: true
+            },
+            confirmpassword : {
+                required: true,
+                minlength : 6,
+                equalTo : "#password"
+            },
+            username: {
+                required: true,
+                maxlength: 45
+            },
+            pin: {
+                required: true,
+                minlength : 6,
+                digits: true,
+                maxlength : 6
+            },
+        },
+        highlight: function(element) {
+            $(element).closest('.control-group').removeClass('success').addClass('error');
+        },
+        success: function(element) {
+            element.text('OK!').addClass('valid').closest('.control-group').removeClass('error').addClass('success');
+        }
+
+
+    });
+
+
+    $('#username').change(function(){
+        username=$('#username').val();
+        url= '/' + username;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (data) {
+                $('#username').val(data);
+            }
+        });
+
+    });
+
+
+
+
+
+    // variable to hold request
+    var request;
+    // bind to the submit event of our form
+    $("#authform").submit(function(event){
+        if(!$('#authform').valid()) {
+            return false;
+        }
+
+        // abort any pending request
+        if (request) {
+            request.abort();
+        }
+        // setup some local variables
+        var $form = $(this);
+        // let's select and cache all the fields
+        var $inputs = $form.find("input, select, button, textarea");
+        // serialize the data in the form
+        var serializedData = $form.serialize();
+        // let's disable the inputs for the duration of the ajax request
+        $inputs.prop("disabled", true);
+
+        // fire off the request to /form.php
+        request = $.ajax({
+            //url: '<?php echo $regPage->getBaseInformationVal('accountRegisterUrl');?>',
+            url: '',
+            type: "post",
+            data: serializedData
+        });
+
+        // callback handler that will be called on success
+        request.done(function (response, textStatus, jqXHR){
+            // log a message to the console
+            jsonObj = JSON.parse(response);
+
+            console.log(jsonObj);
+
+            if(jsonObj.errorCode=='pass'){
+                //url = '<?php echo $regPage->getBaseInformationVal('homeShareLoginPage');?>' +
+                url = '' +
+                'username='+$('#username').val()+
+                "&LID=" + jsonObj.info.LID +
+                "&OCT=" + jsonObj.info.OCT +
+                "&shardId=" + jsonObj.info.shardId +
+                "&extension=" + jsonObj.info.extension +
+                "&aAccountName=" + jsonObj.info.aAccountName;
+                window.location= url;
+
+            }else{
+                errorMsg=jsonObj.info;
+                alert(errorMsg);
+            }
+        });
+
+        // callback handler that will be called on failure
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            // log the error to the console
+            console.error(
+                    "The following error occured: "+
+                    textStatus, errorThrown
+            );
+        });
+
+        // callback handler that will be called regardless
+        // if the request failed or succeeded
+        request.always(function () {
+            // reenable the inputs
+            $inputs.prop("disabled", false);
+        });
+
+        // prevent default posting of form
+        event.preventDefault();
+    });
+
+
+
+
+</script>
+
+</body>
+</html>
+

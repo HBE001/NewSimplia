@@ -1,0 +1,7 @@
+{
+  "name": "OESInputFormPanel",
+  "js": "oesinputformpanel/main.js",
+  "dependencies": [
+    "basicformdatatablepanel"
+  ]
+}

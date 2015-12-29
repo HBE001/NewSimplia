@@ -1,0 +1,7 @@
+{
+  "name": "HomepagePanel",
+  "js": "homepagepanel/main.js",
+  "dependencies": [
+    "mogopakviewerpanel"
+  ]
+}

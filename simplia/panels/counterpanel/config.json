@@ -1,0 +1,7 @@
+{
+  "name": "CounterPanel",
+  "js": "counterpanel/main.js",
+  "dependencies": [
+    "basicformdatatablepanel"
+  ]
+}

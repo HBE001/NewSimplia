@@ -1,0 +1,9 @@
+{
+  "name": "BasicDatabaseFormDatatablePanel",
+  "js": "basicdatabaseformdatatablepanel/basicdatabaseformdatatablepanel.js",
+  "dependencies": [
+    "basicdatatablepanel",
+    "largetextpanel"
+  ]
+
+}

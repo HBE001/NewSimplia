@@ -1,0 +1,1561 @@
+<script type="text/javascript" >
+    function writeCookie(name,value,days) {
+        var date, expires;
+        if (days) {
+            date = new Date();
+            date.setTime(date.getTime()+(days*24*60*60*1000));
+            expires = "; expires=" + date.toGMTString();
+        }else{
+            expires = "";
+        }
+        document.cookie = name + "=" + value + expires + "; path=/";
+    }
+
+    function readCookie(name) {
+        var i, c, ca, nameEQ = name + "=";
+        ca = document.cookie.split(';');
+        for(i=0;i < ca.length;i++) {
+            c = ca[i];
+            while (c.charAt(0)==' ') {
+                c = c.substring(1,c.length);
+            }
+            if (c.indexOf(nameEQ) == 0) {
+                return c.substring(nameEQ.length,c.length);
+            }
+        }
+        return '';
+    }
+
+
+</script>
+<!-- Place inside the <head> of your HTML -->
+
+<script type="text/javascript" >
+    function getURLParameter(name) {
+        return decodeURI(
+                (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+        );
+    }
+
+    var fm = new FileManager();
+
+    var routes = tinyMCE.mogopakPanel.Y.oxygenConfig.express.routes;
+
+    var basePath = routes.fullAppBase + routes.panels + "/" + tinyMCE.mogopakPanel._panelClassName;
+
+    tinyMCE.init({
+        mode : "textareas",
+        theme : "advanced",
+        plugins : "newproj,autolink,lists,pagebreak,style,layer,table,save,spellchecker,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,moxiemanager,autosave,visualblocks, jmform",
+
+        // Theme options - button# indicated the row# only
+        theme_advanced_buttons1 : "",
+        //   theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,formatselect",
+        // theme_advanced_buttons2 : "cut,copy,paste,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,anchor,image,|,code,preview,|,forecolor,backcolor",
+        //theme_advanced_buttons3 : "insertdate,inserttime,|,spellchecker,advhr,,removeformat,|,sub,sup,|,charmap,emotions",
+        //theme_advanced_toolbar_location : "top",
+        theme_advanced_toolbar_location : "none",
+        theme_advanced_toolbar_align : "left",
+        theme_advanced_statusbar_location : "bottom",
+        theme_advanced_resizing : true,
+        contextmenu: "link",
+        valid_children : "+body[style]",
+        /*
+         paste_preprocess : function(pl, o)
+         {
+
+         //o.content = o.content.replace(/id=/gi, "onmouseover=\"check()\" id=");
+
+         var id=o.content;
+         var nid=id.match(/(id[!?=]["]lconnection_)(\d+)/g);
+         if(nid)
+         {
+
+         var sizeofid = nid.length;
+         var f= new Array();
+         for(var i=0;i<sizeofid;i++)
+         {
+         f[i]=nid[i].match(/\d+/);
+
+         }
+
+
+         for (var p=0;p<sizeofid;p++)
+         {
+
+         var datainfo = 'id_number='+ f[p];
+         var finallasty;
+
+         $.ajax({
+         type: "POST",
+         url: "reconnections.php?user="+getURLParameter('user')+"&form=on",
+         data: datainfo,
+         success: function(data) {
+
+         var yesdatamore = data;
+         var y=yesdatamore.split(",");
+         finallasty = "'lconnection_"+y[0]+"','"+y[4]+"','"+y[1]+"','"+y[6]+"','"+y[2]+"','"+y[7]+"','"+y[3]+"','"+y[8]+"','"+y[5]+"'";
+
+
+         } ,
+         async: false
+         });
+
+         o.content = o.content.replace(nid[p], "onmouseover=\"linkconnection("+finallasty+")\" "+nid[p]);
+         }
+         }
+         },*/
+
+
+        formats : {
+            size8pt : {inline : 'span', styles : {fontSize : '8pt'}},
+            size10pt : {inline : 'span', styles : {fontSize : '10pt'}},
+            size11pt : {inline : 'span', styles : {fontSize : '11pt'}},
+            size12pt : {inline : 'span', styles : {fontSize : '12pt'}},
+            size14pt : {inline : 'span', styles : {fontSize : '14pt'}},
+            size16pt : {inline : 'span', styles : {fontSize : '16pt'}},
+            size18pt : {inline : 'span', styles : {fontSize : '18pt'}},
+            size20pt : {inline : 'span', styles : {fontSize : '20pt'}},
+            size24pt : {inline : 'span', styles : {fontSize : '24pt'}},
+            size36pt : {inline : 'span', styles : {fontSize : '36pt'}},
+            size48pt : {inline : 'span', styles : {fontSize : '48pt'}},
+            size52pt : {inline : 'span', styles : {fontSize : '52pt'}},
+            fontandalemono : {inline : 'span', styles : {fontFamily : 'andale mono'}},
+            fontarial : {inline : 'span', styles : {fontFamily : 'arial, helvetica, sans-serif'}},
+            fontarialblack : {inline : 'span', styles : {fontFamily : 'arial black'}},
+            fontbookantiqua : {inline : 'span', styles : {fontFamily : 'book antiqua'}},
+            fontcomicsans : {inline : 'span', styles : {fontFamily : 'comic sans ms'}},
+            fontcouriernew : {inline : 'span', styles : {fontFamily : 'courier new'}},
+            fontgeorgia : {inline : 'span', styles : {fontFamily : 'georgia'}},
+            fonthelvetica : {inline : 'span', styles : {fontFamily : 'helvetica'}},
+            fontsymbol : {inline : 'span', styles : {fontFamily : 'symbol'}},
+            fonttahoma : {inline : 'span', styles : {fontFamily : 'tahoma'}},
+            fontterminal : {inline : 'span', styles : {fontFamily : 'terminal'}},
+            fonttimesnewroman : {inline : 'span', styles : {fontFamily : 'times new roman'}},
+            fonttrebuchetms : {inline : 'span', styles : {fontFamily : 'trebuchet ms'}},
+            fontverdana : {inline : 'span', styles : {fontFamily : 'verdana'}},
+            fontwebdings : {inline : 'span', styles : {fontFamily : 'webdings'}},
+            fontwingdings : {inline : 'span', styles : {fontFamily : 'wingdings'}},
+            zoom100 : {selector : 'p', styles : {zoom : '100%'}},
+            zoom125 : {selector : 'p', styles : {zoom : '125%'}},
+            zoom150 : {selector : 'p', styles : {zoom : '150%'}},
+            zoom175 : {selector : 'p', styles : {zoom : '175%'}},
+            zoom200 : {selector : 'p', styles : {zoom : '200%'}},
+            boldtext: {inline : 'span', styles : {fontWeight : 'bold'}},
+            redtext: {inline : 'span', styles : {color : '#ff0000'}},
+            bluetext: {inline : 'span', styles : {color : 'blue'}},
+            italicbig: {inline : 'span', 'classes': 'style4',  exact : true}
+        },
+        init_instance_callback : "my_custom_init_instance",
+        theme_advanced_resizing: true,
+        theme_advanced_resizing_use_cookie : false,
+        document_base_url: basePath + "/resources/tinymce_dev/jscripts/tiny_mce/",
+        base_url: basePath + "/resources/tinymce_dev/jscripts/tiny_mce/",
+        relative_urls: true,
+//moxiemanager_rootpath : '/projectsimgs/radu',
+        template_external_list_url : "lists/template_list.js",
+//remove_script_host : false,
+        template_templates : [
+            {
+                title : "Header-Footer",
+                src : basePath + "/resources/templates/headerfooter.htm",
+                description : "Ads header and footer"
+            },
+
+            {
+                title : "Page Template",
+                src : basePath + "/resources/templates/template_page.htm",
+                description : "A template page"
+            },
+
+            {
+                title : "Customer Service",
+                src : basePath + "/resources/templates/customerservice.htm",
+                description : "Rentals template."
+            },
+
+            {
+                title : "Responsive Template",
+                src : basePath + "/resources/templates/maintemplate.htm",
+                description : "Responsive website template."
+            }
+        ],
+
+        template_replace_values : {
+            titletemp :  function (titletemp){titletemp.innerHTML = document.getElementsByClassName("projectname")[0].value},
+            pagenumbering : function (pagenumbering){pagenumbering.innerHTML = document.getElementsByClassName("pagenumber")[0].value}
+            // pagenumbering : "Gregory"
+        },
+        content_css : "content.css"
+
+    });
+    tinyMCE.fileManager = fm;
+    tinyMCE.jquery = $;
+    /*
+     tinymce.activeEditor.formatter.register('mycustomformat', {
+     inline : 'span',
+     styles : {color : '#ff0000'}
+     });
+     */
+
+</script >
+
+
+
+<script>
+// change of ids from here
+
+    var move = 3;
+    $(document).ready(function() {
+        $(".menugeneral").eq(0).draggable();
+        $(function() {
+
+            var isDragging = false;
+            $(".topmain, .filemain, .editmain, .insertmain, .viewmain, .formatmain, .pagesmain, .tblmain, .formmain, .interactionmain, .toolsmain, .helpmain").not(".filebackmain")
+                    .mousedown(function() {
+                        $(window).mousemove(function() {
+                            isDragging = true;
+                            $(window).unbind("mousemove");
+                        });
+                    })
+                    .mouseup(function() {
+
+
+                        var wasDragging = isDragging;
+                        isDragging = false;
+                        $(window).unbind("mousemove");
+                        if (!wasDragging) { //was clicking
+                            $(".menugeneral").eq(0).css('border', '1px solid red');
+                            move=1;
+
+
+                        }
+
+
+                    });
+
+
+
+        });
+    });
+
+// double check selector	
+	
+    $(function() {
+        $('body').click(function(e) {
+            //alert(move);
+
+            var offset = $(this).offset();
+            var relativeX = (e.pageX - offset.left)-850;
+            var relativeY = (e.pageY - offset.top);
+            //if(move===0) {move=move+1;}
+            if(move===2)
+            {
+                $(".menugeneral").eq(0).css({
+                    "position":"absolute",
+                    "top": relativeY + "px",
+                    "left": relativeX + "px",
+                });
+                //move = 2;
+                $(".menugeneral").eq(0).css('border', '1px solid black');
+            }
+            move=move+1;
+            //alert("X: " + relativeX + "  Y: " + relativeY);
+        });
+    });
+
+
+
+    
+    function change() {
+        $(".menugeneral").eq(0).next().toggle();
+
+    }
+   
+
+
+    function insertexitdiv() {
+        $('.everything').eq(0).append("<div id=\"temp\" style=\"width:100%; height:100%; position:absolute;z-index:99; left:0;\" onclick=\"hidemenu()\"></div>");
+    }
+
+    function showsave() {
+    
+        tinyMCE.mogopakPanel.childPanel(tinyMCE.mogopakPanel.savePanelName).showPanel();
+        hidemenu();
+    }
+
+
+    function hidesave() {
+        $('.savebox').eq(0).hide();
+    }
+
+
+
+
+    function quicksave() {
+        if(document.getElementsByClassName("projectname")[0].value=="")
+        {
+            showsave();
+        }
+        else
+        {
+            document.getElementsByClassName("qsave")[0].value = "1";
+            var data = { formData: $('.saveform').serializeArray(), contentType: "text/html; charset=UTF-8"};
+            fm.saveFile(data);
+            hidemenu();
+        }
+    }
+
+
+    function publishfunction() {
+        if(document.getElementsByClassName("projectname")[0].value=="")
+        {
+            showsave();
+        }
+        else
+        {
+            url = "https://service2015.s3.amazonaws.com/mogopak/"+document.getElementsByClassName("projectname")[0].value+"/"+document.getElementsByClassName("pagenumber")[0].value+".html";
+            hidemenu();
+            window.open(url,'_blank');
+        }
+
+    }
+
+	
+	
+    function newpage() {
+        if(document.getElementsByClassName("projectname")[0].value=="")
+        {
+            alert("Before you insert a new page you have to have your project saved");
+            showsave();
+        }
+        else
+        {
+            if(parseInt(document.getElementsByClassName('maxpgnewhere')[0].value)>parseInt(document.getElementsByClassName("pagenumber")[0].value))
+            {
+                if (confirm('Are you sure you want to go to a new page! Any unsaved information will be lost!')) {
+                    // Save it!
+                    document.getElementsByClassName("pagenumber")[0].value = parseInt(document.getElementsByClassName('maxpgnewhere')[0].value)+1;
+                    document.getElementsByClassName("content")[0].value = "";
+                    document.getElementsByClassName("npg")[0].value = "1";
+                    //
+                    tinyMCE.activeEditor.setContent("");
+                    document.mainform.submit();
+                }
+            }
+            else
+            {
+                if (confirm('Are you sure you want to go to a new page! Any unsaved information will be lost!')) {
+                    // Save it!
+                    document.getElementsByClassName("pagenumber")[0].value = parseInt(document.getElementsByClassName("pagenumber")[0].value)+1;
+                    document.getElementsByClassName("content")[0].value = "";
+                    document.getElementsByClassName("npg")[0].value = "1";
+                    //
+                    tinyMCE.activeEditor.setContent("");
+                    document.mainform.submit();
+                }
+            }
+        }
+    }
+
+
+    function deletepage() {
+        if(document.getElementsByClassName("projectname")[0].value=="")
+        {
+            alert("Before you delete a page you have to have your project saved");
+            showsave();
+        }
+        else
+        {
+            if (confirm('Are you sure you want to go to delete this page? All the data from this page will be lost!')) {
+                // Save it!
+                document.getElementsByClassName("dpg")[0].value = "1";
+                //document.getElementsByClassName("pagenumber")[0].value = "1";
+                document.mainform.submit();
+            }
+        }
+
+    }
+
+    function folder(item) {
+
+        var $mostimportant = $(item).find('td.thefoldername').html();
+        var $finenow = '#'+$mostimportant;
+        $($finenow).show();
+        $('.mytable').eq(0).hide();
+
+
+    }
+
+
+    function back(nameofback) {
+        var $anotherone = '#'+nameofback;
+        $($anotherone).hide();
+        $('.mytable').eq(0).show();
+
+    }
+
+	
+    function closeopen() {
+        $('.firstopen').eq(0).hide();
+        $('.secondopen').eq(0).hide();
+
+    }
+
+    function openopen() {
+        fm.getFiles({path:"", type:"all"}, function(files) {
+            fm.fileTreeHandler.createTree("fileTree", "allfiles", files);
+            $('.firstopen').eq(0).show();
+            hidemenu();
+            $('.secondopen').eq(0).show();
+        });
+    }
+	
+    function checkforchanges(checkcontent,dir,file) {
+        text = tinyMCE.activeEditor.getContent();
+        tinyMCE.activeEditor.setContent(checkcontent);
+        text2 = tinyMCE.activeEditor.getContent();
+        tinyMCE.activeEditor.setContent(text);
+        finalfile=file.replace(".html","");
+        console.log(checkcontent);
+        if (text!==text2)
+        {
+            if (confirm('Are you sure you want open a different page? Any unsaved data will be lost!')) {
+
+                var rep0 = checkcontent.replace("='linkconnection","=\"linkconnection");
+
+                var rep1 = rep0.replace("background-image: url('","background-image: url(\"");
+                var rep11 = rep1.replace("');","\");");
+
+                var rep2 = rep11.replace("')' href=","')\" href=");
+                tinyMCE.activeEditor.setContent(rep2);
+                document.getElementsByClassName("projectname")[0].value = dir;
+                document.getElementsByClassName("pagenumber")[0].value = finalfile;
+                document.mainform.submit();
+
+            }
+        }
+
+    }
+
+    function indexhide(){
+        $('.firstopenindex').eq(0).hide();
+        $('.secondopenindex').eq(0).hide();
+    }
+
+    function checkforchangesindex(checkcontentindex,dir,file) {
+        textindex = tinyMCE.activeEditor.getContent();
+        tinyMCE.activeEditor.setContent(checkcontentindex);
+        textindex2 = tinyMCE.activeEditor.getContent();
+        tinyMCE.activeEditor.setContent(textindex);
+        finalfileindex=file.replace(".html","");
+//alert(checkcontentindex);
+
+        if (textindex!==textindex2)
+        {
+
+            if (confirm('Are you sure you want open a different page? Any unsaved data will be lost!')) {
+                var rep0 = checkcontentindex.replace("='linkconnection","=\"linkconnection");
+
+//	var xpatt1 = /.*background-image: url\(\'(.*?)\'\);.*/i;
+                //var xresult = rep0.match(xpatt1);
+                //var xres = xresult[0].replace(/\'/g,"\"");
+
+
+                var rep1 = rep0.replace("background-image: url('","background-image: url(\"");
+                var rep11 = rep1.replace("');","\");");
+                var rep2 = rep11.replace("')' href=","')\" href=");
+                tinyMCE.activeEditor.setContent(rep2);
+                indexhide();
+                document.getElementsByClassName("projectname")[0].value = dir;
+                document.getElementsByClassName("pagenumber")[0].value = finalfileindex;
+                document.mainform.submit();
+
+            }
+        }
+
+    }
+
+
+    function closeopenindex() {
+        $('.firstopenindex').eq(0).hide();
+        $('.secondopenindex').eq(0).hide();
+
+    }
+
+    function openopenindex() {
+
+        if(document.getElementsByClassName("projectname")[0].value!="")
+        {
+            $('.firstopenindex').eq(0).show();
+            $('.secondopenindex').eq(0).show();
+            hidemenu();
+        }
+        else
+        {
+            alert("Before you can visualize the index you have to save the project!");
+            showsave();
+            hidemenu();
+        }
+
+
+    }
+
+
+
+    function linkconnect() {
+
+        if(document.getElementsByClassName("linkconnection")[0].value=="external_link")
+        {
+            $('.here2').eq(0).show();
+            /* alert(tinyMCE.activeEditor.selection.getContent());
+             tinyMCE.activeEditor.selection.setContent('yes'); */
+        }
+        else if(document.getElementsByClassName("linkconnection")[0].value=="page")
+        {
+
+            $('.here').eq(0).show();
+        }
+        else if(document.getElementsByClassName("linkconnection")[0].value=="uploadimage")
+        {
+
+            $('.here3').eq(0).show();
+        }
+        else if(document.getElementsByClassName("linkconnection")[0].value=="imageurl")
+        {
+
+            $('.here4').eq(0).show();
+        }
+    }
+
+
+
+    function showlinks() {
+//if(document.getElementsByClassName("projectname")[0].value!=""&&document.getElementsByClassName("pagenumber")[0].value!="")
+//{
+        $('.linksbox').eq(0).show();
+        $('.linksboxgrey').eq(0).show();
+
+//$('#linksbox').draggable();
+        hidemenu();
+//}
+//else
+//{
+//alert("You have to have your project saved before you create a connection.");
+//}
+
+    }
+    var bk1;
+    function getmyselection()
+    {
+        var isIE = /*@cc_on!@*/false;
+        if (isIE==true)
+        {
+            bk1 = tinyMCE.activeEditor.selection.getBookmark();
+        }
+    }
+
+    function addlinkconnections()
+    {
+        var isIE = /*@cc_on!@*/false;
+        if (isIE==true)
+        {
+            tinyMCE.activeEditor.selection.moveToBookmark(bk1);
+        }
+
+
+        var firsttextselected = tinyMCE.activeEditor.selection.getContent();
+        var firstnode = tinyMCE.activeEditor.selection.getNode().nodeName;
+        var checkforcon=firsttextselected.match(/lconnection/g);
+
+        if(firstnode!="A"&&checkforcon==null)
+        {
+            var source_phrase = tinyMCE.activeEditor.selection.getContent();
+            tinyMCE.activeEditor.selection.setContent('');
+            //ajax start
+
+            $('.linksbox').eq(0).hide();
+            var source_pg = $("input.pagenumber").eq(0).val();
+            var source_proj = $("input.projectname").eq(0).val();
+            var target_page = $("input.pageform").eq(0).val();
+            var target_extlink = $("input.external_link_form").eq(0).val();
+
+            var topic = $("input.topic").eq(0).val();
+            var uploadimg = $("input.fileToUpload").eq(0).val();
+            var imgurl = $("input.img_url").eq(0).val();
+
+            var menuname_externallink = $("input.menuname_externallink").eq(0).val();
+            var menuname_fileupload = $("input.menuname_fileupload").eq(0).val();
+            var menuname_imgurl = $("input.menuname_imgurl").eq(0).val();
+            var typechange = "new";
+
+            var dataString = '0'+'&'+ source_pg + '&' + source_phrase + '&' + target_page + '&' + target_extlink + '&' + source_proj+ '&' + topic+ '&' +uploadimg+ '&' + imgurl+ '&' + menuname_externallink+ '&' + menuname_fileupload+ '&' + menuname_imgurl+ '&' + typechange;
+
+			
+            var lastidandother = dataString;
+            var n=lastidandother.split("&");
+            var finallast = "'lconnection_"+n[0]+"','"+n[6]+"','"+n[3]+"','"+n[9]+"','"+n[4]+"','"+n[11]+"','"+n[8]+"','"+n[10]+"','"+n[7]+"'";
+            tinyMCE.activeEditor.selection.setContent('<a href="#" id="lconnection_'+n[0]+'" onclick="linkconnection('+finallast+')">'+source_phrase+'</a>');
+            $(".mainform2")[0].eq(0).reset();
+            document.getElementsByClassName("none")[0].selected=true;
+            $('.here').eq(0).hide();
+            $('.here2').eq(0).hide();
+            $('.here3').eq(0).hide();
+            $('.here4').eq(0).hide();
+            $('.linksboxgrey').eq(0).hide();
+            tinyMCE.activeEditor.selection.moveToBookmark(mymarkselection);
+            /*		 }
+             });*/
+        }
+        else if(firstnode!="A"&&checkforcon!=null)
+        {
+            alert("You have selected a group of characters which already contains a link connection. You cannot create a link connection using this selection!");
+            $(".mainform2")[0].eq(0).reset();
+            $('.here').eq(0).hide();
+            $('.here2').eq(0).hide();
+            $('.here3').eq(0).hide();
+            $('.here4').eq(0).hide();
+        }
+				
+        else if(firstnode=="A"&&checkforcon==null)
+        {
+            alert("The group of characters which you have selected have already a regular link connection! Please remove the regular link connection and then try again!");
+            $(".mainform2")[0].eq(0).reset();
+            $('.here').eq(0).hide();
+            $('.here2').eq(0).hide();
+            $('.here3').eq(0).hide();
+            $('.here4').eq(0).hide();
+        }
+        else if(firstnode=="A"&&checkforcon!=null)
+        {
+            var mymarkselection = tinyMCE.activeEditor.selection.getBookmark();
+            var source_phrase = tinyMCE.activeEditor.selection.getContent();
+            var source_phrase2 = tinyMCE.activeEditor.selection.getContent({format : 'text'});
+            var tempid = source_phrase.match(/lconnection_(\d+)/g);
+            var conid=tempid[0].match(/(\d+)/g);
+            //alert(conid);
+			
+
+            tinyMCE.activeEditor.selection.setContent('');
+            var source_pg = $("input.pagenumber").eq(0).val();
+            var source_proj = $("input.projectname").eq(0).val();
+            var target_page = $("input.pageform").eq(0).val();
+            var target_extlink = $("input.external_link_form").eq(0).val();
+
+            var topic = $("input.topic").eq(0).val();
+            var uploadimg = $("input.fileToUpload").eq(0).val();
+            var imgurl = $("input.img_url").eq(0).val();
+
+            var menuname_externallink = $("input.menuname_externallink").eq(0).val();
+            var menuname_fileupload = $("input.menuname_fileupload").eq(0).val();
+            var menuname_imgurl = $("input.menuname_imgurl").eq(0).val();
+            var typechange = "edit";
+
+            var dataString = '0'+'&'+ source_pg + '&' + source_phrase + '&' + target_page + '&' + target_extlink + '&' + source_proj+ '&' + topic+ '&' +uploadimg+ '&' + imgurl+ '&' + menuname_externallink+ '&' + menuname_fileupload+ '&' + menuname_imgurl+ '&' + conid+ '&' + typechange;
+			
+				
+            var lastidandother = dataString;
+            var n=lastidandother.split("&");
+            var finallast = "'lconnection_"+n[0]+"','"+n[6]+"','"+n[3]+"','"+n[9]+"','"+n[4]+"','"+n[11]+"','"+n[8]+"','"+n[10]+"','"+n[7]+"'";
+            tinyMCE.activeEditor.selection.setContent('<a href="#" id="lconnection_'+n[0]+'" onclick="linkconnection('+finallast+')">'+source_phrase2+'</a>');
+            //tinyMCE.activeEditor.selection.setContent('here is the replacement');
+            $(".mainform2")[0].eq(0).reset();
+            document.getElementsByClassName("none")[0].selected=true;
+            $('.here').eq(0).hide();
+            $('.here2').eq(0).hide();
+            $('.here3').eq(0).hide();
+            $('.here4').eq(0).hide();
+            $('.linksboxgrey').eq(0).hide();
+            $('.firstmanage').eq(0).hide();
+            $('.secondmanage').eq(0).hide();
+            $('.linksbox').eq(0).hide();
+            /*}
+             }); */
+        }
+//ajax end
+    }
+
+
+
+    function hidelinks() {
+        $('.linksbox').eq(0).hide();
+        $('.linksboxgrey').eq(0).hide();
+
+    }
+
+
+    function my_custom_init_instance(inst) {
+        tinymce.dom.Event.add(inst.getWin(), 'resize', function(e) {
+
+        });
+    }
+
+
+
+    function fullscreenmajorfunction()
+    {
+
+        var windowheight = ($(window).height())-50;
+        var windowwidth = ($(window).width())-10;
+        var firstheight;
+        var firstwidth;
+        if( document.getElementsByClassName('fullscreenswitch')[0].value=="")
+        {
+
+//double check for this id
+
+            firstheight = document.getElementById('content'+'_tbl').style.height;
+            firstwidth = document.getElementById('content'+'_tbl').style.width;
+            document.getElementsByClassName('heightforifr')[0].value=firstheight;
+            document.getElementsByClassName('widthforifr')[0].value=firstwidth;
+
+
+        }
+
+
+        if( document.getElementsByClassName('fullscreenswitch')[0].value=="")
+        {
+
+            $('#content_ifr').css({"width":windowwidth+"px", "height":windowheight+"px"});
+            $('.themenu').eq(0).css({"position":"absolute", "top":"-30px","left":"-100px"});
+            document.getElementsByClassName('fullscreenswitch')[0].value = "on";
+            hidemenu();
+        }
+        else if (document.getElementsByClassName('fullscreenswitch')[0].value=="on")
+        {
+
+            if(firstheight === undefined&&firstwidth === undefined)
+            {
+                firstheight=document.getElementsByClassName('heightforifr')[0].value;
+                firstwidth=document.getElementsByClassName('widthforifr')[0].value;
+            }
+            $('#content_ifr').css({"width":firstwidth, "height":firstheight});
+            $('.themenu').eq(0).css({"position":"relative", "top":"0px","left":"0px", "margin-left":"100px","margin-top":"30px"});
+
+            document.getElementsByClassName('fullscreenswitch')[0].value="";
+            hidemenu();
+        }
+
+    }
+
+
+    $(window).load(function() {
+
+        var windowheight = ($(window).height())-50;
+        var windowwidth = ($(window).width())-10;
+
+        if (document.getElementsByClassName('fullscreenswitch')[0].value=="on")
+        {
+            $('#content_ifr').css({"width":windowwidth+"px", "height":windowheight+"px"});
+            $('.themenu').eq(0).css({"position":"absolute", "top":"-30px","left":"-100px"});
+        }
+
+    });
+	
+
+
+
+    $('body').ready(function() {
+        $(".mceStatusbar").append("<div id='projectnameshow'>&nbsp;&nbsp;Project name:</div>");
+    });
+
+    function pagenumbervalidation()
+    {
+        var n=document.getElementsByClassName('pagenumber')[0].value;
+        var isnumber=n.match(/^(0|([1-9]\d*))$/);
+
+        if(isnumber==null)
+        {
+            alert("The page number has to be a natural number!");
+            document.getElementsByClassName('pagenumber')[0].value =""
+        }
+
+    }
+
+    function checkforempty() {
+        if(document.getElementsByClassName('projectname')[0].value==""||document.getElementsByClassName('pagenumber')[0].value =="") {
+            alert("The project name and the page number cannot be blank!");
+        }
+        else {
+		
+            confirmation = true;
+            $('.mytable tr').each(function() {
+                var folders = $(this).find(".thefoldername").html();
+
+                if(folders===document.getElementsByClassName('projectname')[0].value) {
+                    if(confirm('There is another project with the same name! Are you sure you want to save the content in the same folder?')) {
+                        $('#'+folders+' tr').each(function() {
+                            var files = $(this).find(".thefoldername").html();
+                            if(files===(document.getElementsByClassName('pagenumber')[0].value+".html")) {
+                                if(confirm('There is already a page with the same number in this location. Are you sure you want to replace the page?')) {
+
+                                }
+                                else {
+                                    confirmation = false;
+                                }
+                            }
+
+                        });
+                    }
+					
+                    else {
+                        confirmation = false;
+                    }
+                }
+
+            });
+
+            if(confirmation == true) {
+                var data = { formData: $('.saveform').serializeArray(), contentType: "text/html; charset=UTF-8"};
+                fm.saveFile(data);
+                $('.savebox').hide();
+            }
+        }
+    }
+
+
+    function newprojectremovesave()
+    {
+        if(tinyMCE.get('content').execCommand('mceNewDocument'))
+        {
+            document.getElementsByClassName('projectname')[0].value="";
+            document.getElementsByClassName('pagenumber')[0].value="";
+            document.getElementById("insidemce").innerHTML="";
+            document.getElementById("insidemce2").innerHTML="";
+        }
+    }
+	
+
+
+    function closepreview() {
+        $('.firstpreview').eq(0).hide();
+        $('.secondpreview').eq(0).hide();
+
+    }
+
+    function openpreview() {
+        $( ".secondpreview" ).eq(0).resizable();
+        $( ".secondpreview" ).eq(0).draggable();
+        $('.firstpreview').eq(0).show();
+        $('.secondpreview').eq(0).show();
+        hidemenu();
+        var frost = document.createElement("IFRAME");
+        frost.setAttribute("src", "https://service2015.s3.amazonaws.com/mogopak/"+document.getElementsByClassName('projectname')[0].value+"/"+document.getElementsByClassName('pagenumber')[0].value+".html");
+        frost.setAttribute("style", "width:100%;height:100%;");
+        document.getElementsByClassName('iframehere')[0].appendChild(frost);
+
+
+    }
+
+
+    function checkingthefolder()
+    {
+        var phrasing = tinyMCE.activeEditor.selection.getContent({format : 'text'});
+        var n=phrasing.match(/linkconnection/g);
+        alert(phrasing);
+    }
+
+
+	
+	
+    function closemanage()
+    {
+        $('.firstmanage').eq(0).hide();
+        $('.secondmanage').eq(0).hide();
+    }
+
+    function linkconnections()
+    {
+        var primarytextselected = tinyMCE.activeEditor.selection.getContent();
+        var primarynode = tinyMCE.activeEditor.selection.getNode().nodeName;
+        if(primarynode=="A")
+        {
+            tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.selection.getNode());
+            thistexthere = tinyMCE.activeEditor.selection.getContent();
+        }
+        else
+        {
+            thistexthere = primarytextselected;
+        }
+        var checkmultiple=thistexthere.split("lconnection");
+        if(checkmultiple.length>4)
+        {
+            alert("Please select only one connection source");
+        }
+        else
+        {
+            var checkforcon2=thistexthere.match(/lconnection/g);
+            if(checkforcon2==null) {primarynode="x";} else {
+                var n=thistexthere.split("'");}
+            var tablecontent = new Array();
+            var finalum = "";
+				
+            $( ".demo" ).eq(0).empty();
+            if(primarynode=="A")
+            {
+                var lok=n[3].split(",");
+                for(alpha=0;alpha<lok.length;alpha++)
+                {
+                    tablecontent[alpha]="";
+                }
+
+
+                for(j=2;j<18;j++)
+                {
+
+                    if (j % 2 == 0)
+                    {continue;}
+
+                    var checkcoma=n[j].match(/,/g);
+                    if(checkcoma)
+                    {
+                        z=n[j].split(",");
+                        for(m=0;m<z.length;m++)
+                        {
+                            tablecontent[m] += "<td style=\"text-align:center;padding-left:10px; padding-right:10px;\">"+z[m]+"</td>";
+                        }
+                    }
+                    else
+                    {
+                        tablecontent[0] += "<td style=\"text-align:center;padding-left:10px; padding-right:10px;\">"+n[j]+"</td>";
+                    }
+
+
+                }
+
+                for(beta=0;beta<lok.length;beta++)
+                {
+                    finalum += "<tr id=\"row_"+beta+"\"><td><center><input id=\""+beta+"\" type=\"checkbox\"></center></td>"+tablecontent[beta]+"</tr>";
+                }
+
+                $('#demo').append("<div id=\"firstmanage\"  class=\"firstmanage\" style=\"display:none; position:fixed; top:0; left:0; height:100%; width:100%; background-color:black; opacity:0.4; filter:alpha(opacity=40);\"></div><div id=\"secondmanage\" id=\"secondmanage\" style=\"display:none;width:800px; height:550px; background-color:white; position:absolute; top:50%; left:50%;margin: -275px 0 0 -400px;\"><img style=\"position:absolute;margin-left:100%; margin-top:-4%;cursor:pointer;\" onclick=\"closemanage()\" src=\"/mogopak/resources/img/x.png\"><div style=\"width:90%;height:90%; border:solid; border-width:1px;margin-left:4.5%;margin-top:3.5%;overflow:scroll;\">  <div style=\"width:100%;height:100%\"><table cellspacing=\"0\" style=\"margin-top:0px;border-bottom:solid; border-width:1px; border-color:#eeeeee; width:1200px;\"><tr style=\"background-color:#D3DCE3;\"><th>Selection</th><th>Menu name TP</th><th>Target Page</th><th>Menu name EL</th><th>External Link</th><th>Menu name IU</th><th>Image URL</th><th>Menu name LI</th><th>Local Image</th></tr><tr>"+finalum+"</tr></table><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img style=\"padding-right:10px;\" src=\"/mogopak/resources/img/arrow.png\"><select onchange='changeconnections(this.value)'><option value=\"empty\">With selected</option><option value=\"delete\">Delete connection</option></select>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick=\"closemanage();showlinks();getmyselection();\" href=\"#\">Create a new connection</a></div>  </div></div>");
+                $('.firstmanage').eq(0).show();
+                $('.secondmanage').eq(0).show();
+
+            }
+            else
+            {
+                $('#demo').append("<div id=\"firstmanage\" class=\"firstmanage\" style=\"display:none; position:fixed; top:0; left:0; height:100%; width:100%; background-color:black; opacity:0.4; filter:alpha(opacity=40);\"></div><div id=\"secondmanage\" class=\"secondmanage\" style=\"display:none;width:800px; height:550px; background-color:white; position:absolute; top:50%; left:50%;margin: -275px 0 0 -400px;\"><img style=\"position:absolute;margin-left:100%; margin-top:-4%;cursor:pointer;\" onclick=\"closemanage()\" src=\"/mogopak/resources/img/x.png\"><div style=\"width:90%;height:90%; border:solid; border-width:1px;margin-left:4.5%;margin-top:3.5%;overflow:scroll;\">  <div style=\"width:100%;height:100%\"><table cellspacing=\"0\" style=\"margin-top:0px;border-bottom:solid; border-width:1px; border-color:#eeeeee; width:1200px;\"><tr style=\"background-color:#D3DCE3;\"><th>Selection</th><th>Menu name TP</th><th>Target Page</th><th>Menu name EL</th><th>External Link</th><th>Menu name IU</th><th>Image URL</th><th>Menu name LI</th><th>Local Image</th></tr><tr>"+finalum+"</tr></table><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img style=\"padding-right:10px;\" src=\"/mogopak/resources/img/arrow.png\"><select><option value=\"empty\">With selected</option><option value=\"delete\">Delete connection</option></select>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick=\"closemanage();showlinks();getmyselection();\" href=\"#\">Create a new connection</a></div>  </div></div>");
+                $('.firstmanage').eq(0).show();
+                $('.secondmanage').eq(0).show();
+            }
+        }
+    }
+	
+
+
+    function changedbrow (selectedtext, rawtext, typeofchange)
+    {
+        var tempid = selectedtext.match(/lconnection_(\d+)/g);
+        var conid=tempid[0].match(/(\d+)/g);
+
+        goodaa = selectedtext.match(/linkconnection(.*?)href/gi);
+        mars=goodaa[0].split("'");
+
+        for(p=2;p<18;p++)
+        {
+            if (p % 2 == 0) {continue;}
+            if(p==3) { topic = mars[3]; }
+            if(p==5) { target_page = mars[5];}
+            if(p==7) { menuname_externallink = mars[7]; }
+            if(p==9) { target_extlink = mars[9]; }
+            if(p==11) { menuname_imgurl = mars[11]; }
+            if(p==13) { imgurl = mars[13]; }
+            if(p==15) { menuname_fileupload = mars[15]; }
+            if(p==17) { uploadimg = mars[17]; }
+
+        }
+		
+
+        var source_pg = $("input.pagenumber").eq(0).val();
+        var source_proj = $("input.projectname").eq(0).val();
+        /*
+
+         var dataString = 'source_pg='+ source_pg + '&source_phrase=' + rawtext + '&target_page=' + target_page + '&target_extlink=' + target_extlink + '&source_proj=' + source_proj+ '&topic=' + topic+ '&uploadimg=' +uploadimg+ '&imgurl=' + imgurl+ '&menuname_externallink=' + menuname_externallink+ '&menuname_fileupload=' + menuname_fileupload+ '&menuname_imgurl=' + menuname_imgurl+ '&conid=' + conid+ '&typechange=' + typeofchange;
+
+         $.ajax({
+         type: "POST",
+         url: "connections.php?user="+getURLParameter('user')+"&form=on",
+         data: dataString,
+         success: function(data) {
+         var lastidandother = data;
+
+         }
+         }); */
+
+    }
+
+
+	
+    function changeconnections(type)
+    {
+        if(type=="delete")
+        {
+            finalr = "";
+            lasttext = tinyMCE.activeEditor.selection.getContent();
+            lasttext2 = tinyMCE.activeEditor.selection.getContent({format : 'text'});
+            var thisisthepatter = /linkconnection(.*?)href/gi;
+            venus = lasttext.match(thisisthepatter);
+
+            var tempid = lasttext.match(/lconnection_(\d+)/g);
+            var conid=tempid[0].match(/(\d+)/g);
+
+            mars=venus[0].split("'");
+            oneremain = 0;
+            alertremain = 0;
+
+            for(y=2;y<18;y++)
+            {
+                if (y % 2 == 0) {continue;}
+
+                checkcoma2=mars[y].match(/,/g);
+                if(checkcoma2)
+                {
+                    jupiter=mars[y].split(",");
+	//double check ids
+	
+                    finalr += "'";
+                    var countuncheck = 0;
+                    var countuncheck2 = 0;
+                    for(k=0;k<jupiter.length;k++) { if(document.getElementById(k).checked==false) { countuncheck += 1; } }
+                    for(u=0;u<jupiter.length;u++)
+                    {
+
+                        if(document.getElementById(u).checked==false)
+                        {
+                            countuncheck2 +=1;
+                            if(countuncheck2==countuncheck) {finalr += jupiter[u];} else {finalr += jupiter[u]+",";}
+
+                        }
+                        else { document.getElementById("row_" + u).style.visibility = 'hidden';  /*var div = document.getElementById("row_" + u); div.parentNode.removeChild(div);*/ }
+
+                        if(countuncheck==0) {document.getElementById("row_" + u).style.visibility = 'hidden'; oneremain=1;} else if(countuncheck==jupiter.length) {alertremain=1;}
+
+                    }
+                    if(y<17)  { finalr += "',"; }  else  { finalr += "'"; }
+                }
+                else
+                {
+                    if(document.getElementById(0).checked==false) { alertremain = 1;oneremain=2; } else {oneremain = 1;}
+                }
+            }
+            if(alertremain == 1) {alert("You have to select a connection before you try to delete one!");}
+            if(oneremain==0) { tinyMCE.activeEditor.selection.setContent('<a href="#" id="lconnection_'+conid+'" onclick="linkconnection('+'\'lconnection_'+conid+'\','+finalr+')">'+lasttext2+'</a>'); totalf = '<a id="lconnection_'+conid+'" onclick="linkconnection('+'\'lconnection_'+conid+'\','+finalr+')" href="#">'+lasttext2+'</a>'; changedbrow (totalf, lasttext2, 'delete'); }
+            else if(oneremain==1) { document.getElementById("row_0").style.visibility = 'hidden'; tinyMCE.activeEditor.selection.setContent(lasttext2);totalf = '<a id="lconnection_'+conid+'" onclick="linkconnection('+'\'lconnection_'+conid+'\','+finalr+')" href="#">'+lasttext2+'</a>'; changedbrow (totalf, lasttext2, 'deleteall'); }
+            closemanage();
+
+        }
+    }
+
+
+	
+    function mainlinksadd()
+    {
+
+        if((document.getElementsByClassName("topic")[0].value==""&&document.getElementsByClassName("pageform")[0].value!="")||(document.getElementsByClassName("topic")[0].value!=""&&document.getElementsByClassName("pageform")[0].value==""))
+        {
+            alert("You left one of the fields empty. Please fill in all the blank fields before you can proceed adding a link. All fields are required.");
+        }
+        else if((document.getElementsByClassName("menuname_externallink")[0].value==""&&document.getElementsByClassName("external_link_form")[0].value!="")||(document.getElementsByClassName("menuname_externallink")[0].value!=""&&document.getElementsByClassName("external_link_form")[0].value==""))
+        {
+            alert("You left one of the fields empty. Please fill in all the blank fields before you can proceed adding a link. All fields are required.");
+        }
+
+        else if((document.getElementsByClassName("menuname_fileupload")[0].value==""&&document.getElementsByClassName("fileToUpload")[0].value!="")||(document.getElementsByClassName("menuname_fileupload")[0].value!=""&&document.getElementsByClassName("fileToUpload")[0].value==""))
+        {
+            alert("You left one of the fields empty. Please fill in all the blank fields before you can proceed adding a link. All fields are required.");
+        }
+
+        else if((document.getElementsByClassName("menuname_imgurl")[0].value==""&&document.getElementsByClassName("img_url")[0].value!="")||(document.getElementsByClassName("menuname_imgurl")[0].value!=""&&document.getElementsByClassName("img_url")[0].value==""))
+        {
+            alert("You left one of the fields empty. Please fill in all the blank fields before you can proceed adding a link. All fields are required.");
+        }
+
+        else
+        {
+            addlinkconnections();
+//return ajaxFileUpload();
+        }
+    }
+
+    function inserttamplehere() {
+        if(document.getElementsByClassName("projectname")[0].value=="")
+        {
+            alert("Please save your project before you use templates otherwise the variables will be blank.");
+            showsave();
+        }
+        else
+        {
+            tinyMCE.get('content').execCommand('mceTemplate'); hidemenu(); return false;
+        }
+    }
+</script>
+
+<div id="demo" class="demo"></div>
+<div id="themenu" class="themenu">
+
+
+    <div id="linksboxgrey" class="linksboxgrey" style="display:none;position:fixed; top:0; left:0; height:100%; width:100%; background-color:black; opacity:0.4; filter:alpha(opacity=40);">
+    </div>
+    <div id="linksbox" class="linksbox" style="display:none;width:800px; height:550px; background-color:white; position:absolute; top:50%; left:50%;margin: -275px 0 0 -400px;">
+        <img style="position:absolute;margin-left:100%; margin-top:-4%;cursor:pointer;" onclick="hidelinks()" src="/mogopak/resources/img/x.png">
+        <div style="width:90%;height:90%; border:solid; border-width:1px;margin-left:4.5%;margin-top:3.5%;overflow:scroll;">
+            <center style="font-family:Calibri; font-weight:bold;padding-top:5px;background-color:#D3DCE3;">Add new connection <br />&nbsp;<hr></center>
+
+            <div style="padding-left:10px;">
+                <center><label for="projectname" style="font-family:Calibri;">Connection type</label>
+                    <select id="linkconnection" class="linkconnection" onchange="linkconnect()" style="width:130px;">
+                        <option id="none" class="none" value=""></option>
+                        <option value="external_link">External Link</option>
+                        <option value="page">Target Page</option>
+                        <option value="uploadimage">Upload Image</option>
+                        <option value="imageurl">Image URL</option>
+                    </select></center>
+                <form name="mainform2" id="mainform2" class="mainform2" method="post">
+                    <div  unselectable="on"  id="here" class="here" style="display:none;"><hr><label for="topic" style="font-family:Calibri;padding-left:75px;">Menu name:&nbsp;</label><input type="text" name="topic" id="topic" class="topic" value="" style="width:146px;">&nbsp;&nbsp;&nbsp;<label for="number" style="font-family:Calibri;">Target Page</label>:&nbsp;<input type="number" name="target_page" id="pageform" class="pageform" value="" style="width:45px;"></div>
+                    <div  unselectable="on"  id="here2" class="here2" style="display:none"><hr><label for="menuname_externallink" style="font-family:Calibri;padding-left:75px;">Menu name:&nbsp;</label><input type="text" name="menuname_externallink" id="menuname_externallink" class="menuname_externallink" value="" style="width:150px;">&nbsp;&nbsp;&nbsp;<label for="external_link_form" style="font-family:Calibri;">URL:</label>&nbsp;<input type="text" id="external_link_form" class="external_link_form" name="target_extlink" style="width:200px;"></div>
+
+
+                    <div  unselectable="on" id="here3" class="here3" style="display:none"><hr><label for="menuname_fileupload" style="font-family:Calibri;padding-left:75px;">Menu name:&nbsp;</label><input type="text" name="menuname_fileupload" id="menuname_fileupload" class="menuname_fileupload" value="" style="width:146px;">&nbsp;&nbsp;&nbsp;<!--<input type="file" name="fileToUpload" id="fileToUpload"></div> --><input id="treeviewtoshowhere" type="button" style="" value="Choose File"><input type="hidden" name="fileToUpload" id="fileToUpload" class="fileToUpload">&nbsp;&nbsp;<span id="filenamehere"></span></div>
+
+                    <div  unselectable="on"  id="here4" class="here4" style="display:none"><hr><label for="menuname_imgurl" style="font-family:Calibri;padding-left:75px;">Menu name:&nbsp;</label><input type="text" name="menuname_imgurl" id="menuname_imgurl" class="menuname_imgurl" value="" style="width:150px;">&nbsp;&nbsp;&nbsp;<label for="img_url" style="font-family:Calibri;">Image url:</label>&nbsp;<input type="text" id="img_url" class="img_url" name="img_url" style="width:165px;"></div>
+                    <hr>
+                    <center><input  unselectable="on"  type="button" name="connectlinks" id="connectlinks" value="Add" onclick="mainlinksadd();" style="width:80px;margin-top:20px;">&nbsp;&nbsp;&nbsp;<a href="#" onclick="hidelinks();linkconnections();">Back to Manage Connections</a></center>
+                </form>
+            </div>
+        </DIV>
+    </div>
+
+
+    <div id="firstopen" class="firstopen" style="display:none;position:fixed; top:0; left:0; height:100%; width:100%; background-color:black; opacity:0.4; filter:alpha(opacity=40);">
+    </div>
+    <div id="secondopen" class="secondopen" style="display:none;width:800px; height:550px; background-color:white; position:absolute; top:50%; left:50%;margin: -275px 0 0 -400px;">
+        <img style="position:absolute;margin-left:100%; margin-top:-4%;cursor:pointer;" onclick="closeopen()" src="/mogopak/resources/img/x.png">
+        <div style="width:90%;height:90%; border:solid; border-width:1px;margin-left:4.5%;margin-top:3.5%;overflow:scroll;">
+            <table id="mytable" class="mytable" border="0" width="100%"  cellspacing="0">
+
+                <div id="fileTree"></div>
+
+
+
+
+
+
+            </table>
+
+
+        </div>
+    </div>
+
+
+    <div id="firstopenindex" class="firstopenindex" style="display:none;position:fixed; top:0; left:0; height:100%; width:100%; background-color:black; opacity:0.4; filter:alpha(opacity=40);">
+    </div>
+    <div id="secondopenindex" class="secondopenindex" style="display:none;width:800px; height:550px; background-color:white; position:absolute; top:50%; left:50%;margin: -275px 0 0 -400px;">
+        <img style="position:absolute;margin-left:100%; margin-top:-4%;cursor:pointer;" onclick="closeopenindex()" src="/mogopak/resources/img/x.png">
+        <div style="width:90%;height:90%; border:solid; border-width:1px;margin-left:4.5%;margin-top:3.5%;overflow:scroll;">
+
+
+        </div>
+    </div>
+
+
+    <div id="firstpreview" class="firstpreview" style="display:none;position:fixed; top:0; left:0; height:100%; width:100%; background-color:black; opacity:0.4; filter:alpha(opacity=40);">
+    </div>
+    <div id="secondpreview" class="secondpreview" style="display:none;width:800px; height:550px; background-color:white; position:absolute; top:50%; left:50%;margin: -275px 0 0 -400px;">
+        <img style="position:absolute;margin-left:100%; margin-top:-4%;cursor:pointer;" onclick="closepreview()" src="/mogopak/resources/img/x.png">
+        <div id="iframehere" class="iframehere" style="width:90%;height:90%; border:solid; border-width:1px;margin-left:4.5%;margin-top:3.5%;overflow:scroll;">
+
+        </div>
+    </div>
+
+
+    <div id="main" class="menugeneral" style="margin-left:850px;">
+        <table id="tablemain" class="tablemain" border="0" style="width:180px;display:visible;">
+            <tr id="topmain" class="topmain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">Main</td><td style="background-color:#0072c6;"></td></tr>
+            <tr><td onclick="$('.tablemain').eq(0).hide();$('.filen').show();" class="rowmenu">File</td><td class="rowmenu2"><span style="font-family:'Wingdings 3'">u</span>&nbsp;&nbsp;</td></tr>
+            <tr><td onclick="$('.tablemain').eq(0).hide();$('.editn').show();" class="rowmenu">Edit</td><td><span style="font-family:'Wingdings 3'">u</span>&nbsp;&nbsp;</td></tr>
+            <tr><td onclick="$('.tablemain').eq(0).hide();$('.insertn').show();" class="rowmenu">Insert</td><td><span style="font-family:'Wingdings 3'">u</span>&nbsp;&nbsp;</td></tr>
+            <tr><td onclick="$('.tablemain').eq(0).hide();$('.viewn').show();" class="rowmenu">View</td><td><span style="font-family:'Wingdings 3'">u</span>&nbsp;&nbsp;</td></tr>
+            <tr><td onclick="$('.tablemain').eq(0).hide();$('.formatn').show();" class="rowmenu">Format</td><td><span style="font-family:'Wingdings 3'">u</span>&nbsp;&nbsp;</td></tr>
+            <tr><td onclick="$('.tablemain').eq(0).hide();$('.pagesn').show();" class="rowmenu">Pages</td><td><span style="font-family:'Wingdings 3'">u</span>&nbsp;&nbsp;</td></tr>
+            <tr><td onclick="$('.tablemain').eq(0).hide();$('.tablen').show();" class="rowmenu">Table</td><td><span style="font-family:'Wingdings 3'">u</span>&nbsp;&nbsp;</td></tr>
+            <tr><td onclick="$('.tablemain').eq(0).hide();$('.formsn').show();" class="rowmenu">Forms</td><td><span style="font-family:'Wingdings 3'">u</span>&nbsp;&nbsp;</td></tr>
+            <tr><td onclick="$('.tablemain').eq(0).hide();$('.interactionn').show();" class="rowmenu">Interaction</td><td><span style="font-family:'Wingdings 3'">u</span>&nbsp;&nbsp;</td></tr>
+            <tr><td onclick="$('.tablemain').eq(0).hide();$('.toolsn').show();" class="rowmenu">Tools</td><td><span style="font-family:'Wingdings 3'">u</span>&nbsp;&nbsp;</td></tr>
+            <tr><td onclick="$('.tablemain').eq(0).hide();$('.helpn').show();" class="rowmenu">Help</td><td><span style="font-family:'Wingdings 3'">u</span>&nbsp;&nbsp;</td></tr>
+        </table>
+        <table id="tablefile" border="0" class="filen" style="width:180px;display:none;">
+            <tr style="position:absolute;margin-left:15px;margin-top:2px;"><td><span id="filebackmain" class="filebackmain" onclick="$('.filen').hide();$('.tablemain').eq(0).show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;color:white;">t</span></td></tr>
+            <tr id="filemain" class="filemain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">&nbsp;&nbsp;&nbsp;File</td></tr>
+            <tr><td onclick="newprojectremovesave(); hidemenu(); return false;" class="rowmenu">New Project</td></tr>
+            <tr><td onclick="tinyMCE.mogopakPanel.openFileBrowserDialog('openmogopak');" class="rowmenu">Open</td></tr>
+            <tr><td onclick="tinyMCE.mogopakPanel.publishMogopak();" class="rowmenu">Publish</td></tr>
+            <tr><td onclick="quicksave()" class="rowmenu">Save</td></tr>
+            <tr><td onclick="showsave()" class="rowmenu">Save as</td></tr>
+            <tr><td class="rowmenuhr"><hr></td></tr>
+            <tr><td onclick="openopenindex()" class="rowmenu">Index</td></tr>
+            <tr><td class="rowmenu">Marketing</td></tr>
+            <tr><td class="rowmenuhr"><hr></td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('Print'); hidemenu(); return false;" class="rowmenu">Print</td></tr>
+            <tr><td class="rowmenu">Project settings</td></tr>
+        </table>
+
+
+        <table id="tablefile" class="editn" style="width:180px;display:none;">
+            <tr style="position:absolute;margin-left:15px;margin-top:2px;"><td><span id="editbackmain" onclick="$('.editn').hide();$('#tablemain').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;color:white;">t</span></td></tr>
+            <tr id="editmain" class="editmain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">&nbsp;&nbsp;&nbsp;Edit</td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('selectall'); hidemenu(); return false;" class="rowmenu">Select All</td></tr>
+            <tr><td class="rowmenuhr"><hr></td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('Undo'); hidemenu(); return false;" class="rowmenu">Undo</td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('Redo'); hidemenu(); return false;" class="rowmenu">Redo</td></tr>
+            <tr><td class="rowmenuhr"><hr></td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('Cut'); hidemenu(); return false;" class="rowmenu">Cut</td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('Copy'); hidemenu(); return false;" class="rowmenu">Copy</td></tr>
+            <tr><td class="rowmenu" id="pastespecialrow" onclick="$('.editn').hide();$('.pasten').show();">Paste special&nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td class="rowmenuhr"><hr></td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('mceSearch'); hidemenu(); return false;" class="rowmenu">Find</td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('mceReplace'); hidemenu(); return false;" class="rowmenu">Replace</td></tr>
+        </table>
+        <table class="pasten" id="tablefile" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.pasten').hide();$('.editn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Paste special</td></tr>
+            <tr><td  onclick="tinyMCE.get('content').execCommand('mcePasteText'); hidemenu(); return false;"  class="rowmenu">Paste as plain text</td></tr>
+            <tr><td  onclick="tinyMCE.get('content').execCommand('mcePasteWord'); hidemenu(); return false;"  class="rowmenu">Paste from word</td></tr>
+        </table>
+
+
+        <table id="tablefile" class="insertn" style="width:180px; padding-right:5px;display:none;">
+            <tr style="position:absolute;margin-left:15px;margin-top:2px;"><td><span id="insertbackmain" onclick="$('.insertn').hide();$('#tablemain').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;color:white;">t</span></td></tr>
+            <tr id="insertmain" class="insertmain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">&nbsp;&nbsp;&nbsp;Insert</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceAdvImage'); hidemenu(); return false;" class="rowmenu">Insert/Edit image</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceMedia'); hidemenu(); return false;" class="rowmenu">Insert/Edit embedded media</td></tr>
+            <tr><td  unselectable="on" onclick="tinyMCE.get('content').execCommand('mceAdvLink'); hidemenu(); return false;" class="rowmenu">Insert/Edit link</td></tr>
+            <!-- <tr><td class="rowmenu">Insert a file</td></tr> -->
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceInsertLayer'); hidemenu(); return false;" class="rowmenu">Insert New Layer</td></tr>
+            <tr><td unselectable="on" class="rowmenuhr"><hr></td></tr>
+            <tr><td unselectable="on" class="rowmenu" onclick="$('.insertn').hide();$('.listn').show();" >Insert List&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceCharMap'); hidemenu(); return false;" class="rowmenu">Insert special character</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceNonBreaking'); hidemenu(); return false;" class="rowmenu">Insert a non breaking space character</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mcePageBreak'); hidemenu(); return false;" class="rowmenu">Insert a pagebreak for printing</td></tr>
+            <tr><td unselectable="on" class="rowmenuhr"><hr></td></tr>
+            <tr><td unselectable="on" class="rowmenu">Insert note</td></tr>
+            <tr><td unselectable="on" onclick="inserttamplehere();" class="rowmenu">Insert a predifined template</td></tr>
+            <tr><td unselectable="on" class="rowmenuhr"><hr></td></tr>
+            <tr><td unselectable="on" class="rowmenu" onclick="$('.insertn').hide();$('.datetimen').show();">Date/Time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('InsertHorizontalRule'); hidemenu(); return false;" class="rowmenu">Insert line</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceEmotion'); hidemenu(); return false;" class="rowmenu">Emotions</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceInsertAnchor'); hidemenu(); return false;" class="rowmenu">Insert/Edit anchor</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceAttributes'); hidemenu(); return false;" class="rowmenu">Insert/Edit attributes</td></tr>
+        </table>
+        <table id="tablefile" class="listn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.listn').hide();$('.insertn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Insert List</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('InsertUnorderedList'); hidemenu(); return false;" class="rowmenu">Insert Bulleted List</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('InsertOrderedList'); hidemenu(); return false;" class="rowmenu">Insert Number List</td></tr>
+        </table>
+        <table id="tablefile" class="datetimen" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.datetimen').hide();$('.insertn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Date/Time</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceInsertDate'); hidemenu(); return false;" class="rowmenu">Insert date</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceInsertTime'); hidemenu(); return false;" class="rowmenu">Insert time</td></tr>
+        </table>
+
+
+        <table id="tablefile" class="viewn" style="width:180px;display:none;">
+            <tr style="position:absolute;margin-left:15px;margin-top:2px;"><td><span id="viewbackmain" onclick="$('.viewn').hide();$('#tablemain').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;color:white;">t</span></td></tr>
+            <tr  id="viewmain" class="viewmain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">&nbsp;&nbsp;&nbsp;View</td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('mceVisualBlocks'); hidemenu(); return false;" class="rowmenu">Show/Hide Guidelines</td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('mceVisualChars'); hidemenu(); return false;" class="rowmenu">Show/Hide Control Chars</td></tr>
+            <tr><td class="rowmenuhr"><hr></td></tr>
+            <tr><td class="rowmenu">Notes</td></tr>
+            <tr><td class="rowmenuhr"><hr></td></tr>
+            <tr><td onclick="openpreview();" class="rowmenu">Preview</td></tr>
+            <!--<tr><td onclick="previewWindow('#content');" class="rowmenu">Preview</td></tr>-->
+            <tr><td  onclick="$('.viewn').hide();$('.zoomn').show();"  class="rowmenu">Zoom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td onclick="fullscreenmajorfunction();" class="rowmenu">Toggle Full Screen</td></tr>
+        </table>
+        <table id="tablefile" class="zoomn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.zoomn').hide();$('.viewn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Zoom</td></tr>
+            <tr><td onclick="tinymce.activeEditor.formatter.apply('zoom100'); hidemenu();tinyMCE.activeEditor.UndoManager.add(); return false;" class="rowmenu">100%</td></tr>
+            <tr><td onclick="tinymce.activeEditor.formatter.apply('zoom125'); hidemenu();tinyMCE.activeEditor.UndoManager.add(); return false;" class="rowmenu">125%</td></tr>
+            <tr><td onclick="tinymce.activeEditor.formatter.apply('zoom150'); hidemenu();tinyMCE.activeEditor.UndoManager.add(); return false;"  class="rowmenu">150%</td></tr>
+            <tr><td onclick="tinymce.activeEditor.formatter.apply('zoom175'); hidemenu();tinyMCE.activeEditor.UndoManager.add(); return false;" class="rowmenu">175%</td></tr>
+            <tr><td onclick="tinymce.activeEditor.formatter.apply('zoom200'); hidemenu();tinyMCE.activeEditor.UndoManager.add(); return false;" class="rowmenu">200%</td></tr>
+        </table>
+
+        <table id="tablefile" class="formatn" style="width:180px;display:none;">
+            <tr style="position:absolute;margin-left:15px;margin-top:2px;"><td><span id="formatbackmain" onclick="$('.formatn').hide();$('#tablemain').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;color:white;">t</span></td></tr>
+            <tr id="formatmain" class="formatmain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">&nbsp;&nbsp;&nbsp;Format</td></tr>
+            <tr><td unselectable="on"  onclick="$('.formatn').hide();$('.formatsn').show();" class="rowmenu">Formats &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceStyleProps'); hidemenu(); return false;" class="rowmenu">Edit CSS Style</td></tr>
+            <tr><td unselectable="on" class="rowmenuhr"><hr></td></tr>
+            <tr><td unselectable="on" onclick="$('.formatn').hide();$('.colorn').show();" class="rowmenu">Color &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="$('.formatn').hide();$('.fontn').show();" class="rowmenu">Font &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="$('.formatn').hide();$('.textdecn').show();" class="rowmenu">Text-Decoration &nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceMakeAbsolute'); hidemenu(); return false;" class="rowmenu">Absolute Positioning</td></tr>
+            <tr><td unselectable="on" onclick="$('.formatn').hide();$('.typen').show();" class="rowmenu">Type &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" class="rowmenuhr"><hr></td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('RemoveFormat'); hidemenu(); return false;" class="rowmenu">Remove Formating</td></tr>
+        </table>
+        <table id="tablefile" class="formatsn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.formatsn').hide();$('.formatn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Formats</td></tr>
+            <tr><td unselectable="on" onclick="$('.formatsn').hide();$('.alignmentn').show();" class="rowmenu">Alignment&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="$('.formatsn').hide();$('.blocksn').show();" class="rowmenu">Blocks&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="$('.formatsn').hide();$('.directionn').show();" class="rowmenu">Direction&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="$('.formatsn').hide();$('.headingsn').show();" class="rowmenu">Headings&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="$('.formatsn').hide();$('.indentn').show();" class="rowmenu">Indent&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="$('.formatsn').hide();$('.moven').show();" class="rowmenu">Move&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="$('.formatsn').hide();$('.paragraphn').show();" class="rowmenu">Paragraph&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="$('.formatsn').hide();$('.stylesn').show();" class="rowmenu">Styles&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+        </table>
+        <table id="tablefile" class="alignmentn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.alignmentn').hide();$('.formatsn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Alignment</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('JustifyLeft'); hidemenu(); return false;" class="rowmenu">Align Left</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('JustifyRight'); hidemenu(); return false;" class="rowmenu">Align Right</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('JustifyCenter'); hidemenu(); return false;" class="rowmenu">Align Center</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('JustifyFull'); hidemenu(); return false;" class="rowmenu">Align Full</td></tr>
+        </table>
+        <table id="tablefile" class="blocksn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.blocksn').hide();$('.formatsn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Blocks</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('FormatBlock', false, 'p'); hidemenu(); return false;" class="rowmenu">Paragraph</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceBlockQuote'); hidemenu(); return false;" class="rowmenu">Blockquote</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('FormatBlock', false, 'address'); hidemenu(); return false;" class="rowmenu">Address</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('FormatBlock', false, 'pre'); hidemenu(); return false;" class="rowmenu">HTML5 PRE Tag</td></tr>
+        </table>
+        <table id="tablefile" class="directionn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.directionn').hide();$('.formatsn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Direction</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceDirectionLTR'); hidemenu(); return false;" class="rowmenu">Left to Right</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceDirectionRTL'); hidemenu(); return false;" class="rowmenu">Right to Left</td></tr>
+        </table>
+        <table id="tablefile" class="headingsn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.headingsn').hide();$('.formatsn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Headings</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('FormatBlock', false, 'h1'); hidemenu(); return false;" class="rowmenu">H1</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('FormatBlock', false, 'h2'); hidemenu(); return false;" class="rowmenu">H2</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('FormatBlock', false, 'h3'); hidemenu(); return false;" class="rowmenu">H3</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('FormatBlock', false, 'h4'); hidemenu(); return false;" class="rowmenu">H4</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('FormatBlock', false, 'h5'); hidemenu(); return false;" class="rowmenu">H5</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('FormatBlock', false, 'h6'); hidemenu(); return false;" class="rowmenu">H6</td></tr>
+        </table>
+        <table id="tablefile" class="indentn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.indentn').hide();$('.formatsn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Indent</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('Outdent'); hidemenu(); return false;" class="rowmenu">Decrease Indent</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('Indent'); hidemenu(); return false;" class="rowmenu">Increase Indent</td></tr>
+        </table>
+        <table id="tablefile" class="moven" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.moven').hide();$('.formatsn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Move</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceMoveForward'); hidemenu(); return false;" class="rowmenu">Move Forward</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceMoveBackward'); hidemenu(); return false;" class="rowmenu">Move Backward</td></tr>
+        </table>
+        <table id="tablefile" class="paragraphn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.paragraphn').hide();$('.formatsn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Paragraph</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceCite'); hidemenu(); return false;" class="rowmenu">Citation</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceAbbr'); hidemenu(); return false;" class="rowmenu">Abbrevation</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceAcronym'); hidemenu(); return false;" class="rowmenu">Acronym</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceDel'); hidemenu(); return false;" class="rowmenu">Deletion</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceIns'); hidemenu(); return false;" class="rowmenu">Insertion</td></tr>
+        </table>
+        <table id="tablefile" class="stylesn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.stylesn').hide();$('.formatsn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Styles</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('boldtext'); hidemenu(); return false;" class="rowmenu" style="font-size:8pt;font-weight:bold">Style1</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('redtext'); hidemenu(); return false;" class="rowmenu" style="font-size:8pt; color:red;">Style2</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('bluetext'); hidemenu(); return false;" class="rowmenu" style="font-size:8pt; color:blue;">Style3</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('italicbig'); hidemenu(); return false;" class="rowmenu" style="font-size:18pt; font-style:italic;">Style4</td></tr>
+        </table>
+        <table id="tablefile" class="colorn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.colorn').hide();$('.formatn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Color</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceBackColor'); hidemenu(); return false;" class="rowmenu">Background</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceForeColor'); hidemenu(); return false;" class="rowmenu">Text</td></tr>
+        </table>
+        <table id="tablefile" class="fontn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.fontn').hide();$('.formatn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Font</td></tr>
+            <tr><td unselectable="on" onclick="$('.fontn').hide();$('.familyn').show();" class="rowmenu">Family &nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on" onclick="$('.fontn').hide();$('.sizen').show();" class="rowmenu">Size &nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+        </table>
+        <table id="tablefile" class="sizen" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.sizen').hide();$('.fontn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Size</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size8pt'); hidemenu(); return false;" class="rowmenu">8pt</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size10pt'); hidemenu(); return false;" class="rowmenu">10pt</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size11pt'); hidemenu(); return false;" class="rowmenu">11pt</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size12pt'); hidemenu(); return false;" class="rowmenu">12pt</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size14pt'); hidemenu(); return false;" class="rowmenu">14pt</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size16pt'); hidemenu(); return false;" class="rowmenu">16pt</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size18pt'); hidemenu(); return false;" class="rowmenu">18pt</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size20pt'); hidemenu(); return false;" class="rowmenu">20pt</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size24pt'); hidemenu(); return false;" class="rowmenu">24pt</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size36pt'); hidemenu(); return false;" class="rowmenu">36pt</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size48pt'); hidemenu(); return false;" class="rowmenu">48pt</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('size52pt'); hidemenu(); return false;" class="rowmenu">52pt</td></tr>
+        </table>
+        <table id="tablefile" class="familyn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.familyn').hide();$('.fontn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Size</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontandalemono'); hidemenu(); return false;" class="rowmenu">Andale Mono</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontarial'); hidemenu(); return false;" class="rowmenu">Arial</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontarialblack'); hidemenu(); return false;" class="rowmenu">Arial Black</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontbookantiqua'); hidemenu(); return false;" class="rowmenu">Book Antiqua</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontcomicsans'); hidemenu(); return false;" class="rowmenu">Comic Sans MS</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontcouriernew'); hidemenu(); return false;" class="rowmenu">Courier New</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontgeorgia'); hidemenu(); return false;" class="rowmenu">Georgia</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fonthelvetica'); hidemenu(); return false;" class="rowmenu">Helvetica</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontsymbol'); hidemenu(); return false;" class="rowmenu">Symbol</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fonttahoma'); hidemenu(); return false;" class="rowmenu">Tahoma</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontterminal'); hidemenu(); return false;" class="rowmenu">Terminal</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fonttimesnewroman'); hidemenu(); return false;" class="rowmenu">Times New Roman</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fonttrebuchetms'); hidemenu(); return false;" class="rowmenu">Trebuchet MS</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontverdana'); hidemenu(); return false;" class="rowmenu">Verdana</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontwebdings'); hidemenu(); return false;" class="rowmenu">Webdings</td></tr>
+            <tr><td unselectable="on" onclick="tinymce.activeEditor.formatter.apply('fontwingdings'); hidemenu(); return false;" class="rowmenu">Wingdings</td></tr>
+        </table>
+        <table id="tablefile" class="textdecn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.textdecn').hide();$('.formatn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Formats</td></tr>
+            <tr><td unselectable="on" class="rowmenu" onclick="tinyMCE.get('content').execCommand('Bold'); hidemenu(); return false;">Bold</td></tr>
+            <tr><td unselectable="on" class="rowmenu" onclick="tinyMCE.get('content').execCommand('Italic'); hidemenu(); return false;">Italic</td></tr>
+            <tr><td unselectable="on" class="rowmenu" onclick="tinyMCE.get('content').execCommand('Strikethrough'); hidemenu(); return false;">Strikethrough</td></tr>
+            <tr><td unselectable="on" class="rowmenu" onclick="tinyMCE.get('content').execCommand('Underline'); hidemenu(); return false;">Underline</td></tr>
+        </table>
+        <table id="tablefile" class="typen" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.typen').hide();$('.formatn').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Type</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('Superscript'); hidemenu(); return false;" class="rowmenu">Superscript</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('Subscript'); hidemenu(); return false;" class="rowmenu">Subscript</td></tr>
+        </table>
+
+        <table id="tablefile" class="pagesn" style="width:180px;display:none;">
+            <tr style="position:absolute;margin-left:15px;margin-top:2px;"><td><span id="pagesbackmain" onclick="$('.pagesn').hide();$('#tablemain').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;color:white;">t</span></td></tr>
+            <tr id="pagesmain" class="pagesmain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">&nbsp;&nbsp;&nbsp;Pages</td></tr>
+            <tr><td onclick="newpage()" class="rowmenu">New Page</td></tr>
+            <tr><td onclick="deletepage()" class="rowmenu">Delete Page</td></tr>
+        </table>
+
+        <table id="tablefile" class="tablen" style="width:180px;display:none;">
+            <tr style="position:absolute;margin-left:15px;margin-top:2px;"><td><span id="tablebackmain" onclick="$('.tablen').hide();$('#tablemain').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;color:white;">t</span></td></tr>
+            <tr id="tblmain" class="tblmain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">&nbsp;&nbsp;&nbsp;Table</td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('mceInsertTable'); hidemenu(); return false;" class="rowmenu">Insert/Edit Table</td></tr>
+            <tr><td class="rowmenuhr"><hr></td></tr>
+            <tr><td unselectable="on"  onclick="$('.tablen').hide();$('.rown').show();" class="rowmenu">Row&nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on"  onclick="$('.tablen').hide();$('.columnn').show();" class="rowmenu">Column&nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+            <tr><td unselectable="on"  onclick="$('.tablen').hide();$('.celln').show();" class="rowmenu">Cells&nbsp;&nbsp;&nbsp;<span style="font-family:'Wingdings 3'">u</span></td></tr>
+        </table>
+        <table id="tablefile" class="rown" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.rown').hide();$('.tablen').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Row</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceTableInsertRowAfter'); hidemenu(); return false;" class="rowmenu">Insert row after</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceTableInsertRowBefore'); hidemenu(); return false;" class="rowmenu">Insert row before</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceTableDeleteRow'); hidemenu(); return false;" class="rowmenu">Delete row</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceTableRowProps'); hidemenu(); return false;" class="rowmenu">Table row properties</td></tr>
+        </table>
+        <table id="tablefile" class="columnn" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.columnn').hide();$('.tablen').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Column</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceTableInsertColAfter'); hidemenu(); return false;" class="rowmenu">Insert column after</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceTableInsertColBefore'); hidemenu(); return false;" class="rowmenu">Insert column before</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceTableDeleteCol'); hidemenu(); return false;" class="rowmenu">Delete column</td></tr>
+        </table>
+        <table id="tablefile" class="celln" style="width:180px;display:none;">
+            <tr style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;"><span onclick="$('.celln').hide();$('.tablen').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;">t</span>&nbsp;&nbsp;Cell</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceTableSplitCells'); hidemenu(); return false;" class="rowmenu">Split merged cells</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceTableMergeCells'); hidemenu(); return false;" class="rowmenu">Merge cells</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceTableCellProps'); hidemenu(); return false;" class="rowmenu">Cell Properties</td></tr>
+        </table>
+
+        <table id="tablefile" class="formsn" style="width:180px;display:none;">
+            <tr style="position:absolute;margin-left:15px;margin-top:2px;"><td><span id="formsbackmain" onclick="$('.formsn').hide();$('#tablemain').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;color:white;">t</span></td></tr>
+            <tr id="formmain" class="formmain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">&nbsp;&nbsp;&nbsp;Forms</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceJMFormInsertForm'); hidemenu(); return false;" class="rowmenu">Insert Form</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceJMFormDelete'); hidemenu(); return false;" class="rowmenu">Delete Form</td></tr>
+            <tr><td class="rowmenuhr"><hr></td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceJMFormInsertInput'); hidemenu(); return false;" class="rowmenu">Input Boxes</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceJMFormInsertSelect'); hidemenu(); return false;" class="rowmenu">Select List</td></tr>
+            <tr><td unselectable="on" onclick="tinyMCE.get('content').execCommand('mceJMFormInsertTextarea'); hidemenu(); return false;" class="rowmenu">Textarea</td></tr>
+        </table>
+
+        <table id="tablefile" class="interactionn" style="width:180px;display:none;">
+            <tr style="position:absolute;margin-left:15px;margin-top:2px;"><td><span id="interactionbackmain" onclick="$('.interactionn').hide();$('#tablemain').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;color:white;">t</span></td></tr>
+            <tr id="interactionmain" class="interactionmain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">&nbsp;&nbsp;&nbsp;Interaction</td></tr>
+            <tr><td  unselectable="on"  onclick="linkconnections();getmyselection();hidemenu();" class="rowmenu">Links</td></tr>
+            <tr><td unselectable="on" class="rowmenu">Paths</td></tr>
+            <tr><td unselectable="on" class="rowmenu">Transitions</td></tr>
+        </table>
+
+        <table id="tablefile" class="toolsn" style="width:180px;display:none;">
+            <tr style="position:absolute;margin-left:15px;margin-top:2px;"><td><span id="toolsbackmain" onclick="$('.toolsn').hide();$('#tablemain').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;color:white;">t</span></td></tr>
+            <tr id="toolsmain" class="toolsmain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">&nbsp;&nbsp;&nbsp;Tools</td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('mceCleanup'); hidemenu(); return false;" class="rowmenu">Cleanup Messy Code</td></tr>
+            <tr><td onclick="tinyMCE.get('content').execCommand('mceCodeEditor'); hidemenu(); return false;" class="rowmenu">Edit HTML Source</td></tr>
+        </table>
+
+        <table id="tablefile" class="helpn" unselectable="on" style="width:180px;display:none;">
+            <tr style="position:absolute;margin-left:15px;margin-top:2px;"><td><span onclick="$('.helpn').hide();$('#tablemain').show();" style="font-family:'Wingdings 3';margin-left:-4px;cursor:pointer;color:white;">t</span></td></tr>
+            <tr id="helpmain" class="helpmain" style="margin-top:0; padding-top:0;border-spacing: 0; border-collapse: collapse;"><td onclick="" class="rowmenu" style="background-color:#0072c6;color:white; font-family:'Segoe UI';font-size:13px;margin-top:0;">&nbsp;&nbsp;&nbsp;Help</td></tr>
+            <tr  unselectable="on" ><td  unselectable="on"  class="rowmenu">Help</td></tr>
+        </table>
+
+
+    </div>
+
+    <div  id="everything" class="everything" ></div>
+    <!-- Place this in the body of the page content -->
+
+    <div id="savebox" class="savebox" style="display:none;">
+        <div id="saveboxtwo">
+            <div style="width:20px;height:20px;position:absolute;margin-left:280px;margin-top:-30px;cursor:pointer;"><img src="/mogopak/resources/img/x.png" onclick="hidesave()"></div>
+            <center style="font-family:Calibri; font-weight:bold;padding-top:5px;">Save as</center>
+            <hr>
+            <div style="padding-left:10px;">
+                <form id="saveform" class="saveform">
+                    <label for="projectname" style="font-family:Calibri;">Project name:</label>
+                    <input type="text" name="projectname" id="projectname" class="projectname" value="">
+                    <label for="projectname" style="font-family:Calibri;padding-right:1px;">Page number:</label>
+                    <input type="text" name="pagenumber" onblur="pagenumbervalidation()" id="pagenumber" class="pagenumber" style="width:30px;" value="">
+                    <input type="hidden" value="" id="qsave" class="qsave" name="qsave">
+                    <input type="hidden" value="" id="npg" class="npg" name="npg">
+                    <input type="hidden" value="" id="maxpgnewhere" class="maxpgnewhere" name="maxpgnewhere">
+                    <input type="hidden" value="" id="dpg" class="dpg" name="dpg">
+                    <input type="hidden" value="" id="fullscreenswitch" class="fullscreenswitch" name="fullscreenswitch">
+                    <input type="hidden" value="" id="widthforifr" class="widthforifr" name="widthforifr">
+                    <input type="hidden" value="" id="heightforifr" class="heightforifr" name="heightforifr">
+
+                    <hr>
+                    <center><input type="button" name="save_submit" onclick="checkforempty();return false;" value="Save" style="width:80px;"></center>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <textarea  id="content" class="content" name="content" cols="100" rows="25"></textarea>
+
+
+
+    <br /><br />
+
+
+</div>
+
+<div style="padding-left:100px;">
+    <b>Recommended Web Browser: Chrome</b><br />
+
+    <b>Placeholders:</b><br /><br />
+
+    - File -> Project Settings<br />
+    - Insert -> Note<br />
+    - View -> Notes<br />
+    - Interaction -> Paths<br />
+    - Interaction -> Transitions<br />
+    - Help -Help<br /><br />
+
+
+</div>
+
+<!-- <div id="checktestcheck"><a href="javascript:moxman.browse();">asdasd</a></div> -->
+
+<script>
+
+    var x = document.getElementsByClassName("projectname")[0];
+    x.addEventListener("blur", myFunction);
+
+    function myFunction() {
+        document.getElementById("insidemce").innerHTML = document.getElementsByClassName("projectname")[0].value;
+    }
+
+    var y = document.getElementsByClassName("pagenumber")[0];
+    y.addEventListener("blur", secondfunction);
+
+    function secondfunction() {
+        document.getElementById("insidemce2").innerHTML = document.getElementsByClassName("pagenumber")[0].value;
+    }
+
+</script>
