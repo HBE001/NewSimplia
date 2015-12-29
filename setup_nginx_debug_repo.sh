@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PATH="/home/ec2-user/nginx_debug_repos_conf/"
+PATH="/home/lotusinterworks.internal/yahyas/nginx_debug_repos_conf/"
 #PATH="/home/lotusinterworks.internal/yahyas/nginx_debug_repos_conf/"
 
 REPO=$1;
@@ -27,5 +27,5 @@ server {
 
 EOM
 
-/usr/bin/sudo service nginx restart
+sudo /usr/bin/sudo service nginx restart
 #sudo service nginx restart
