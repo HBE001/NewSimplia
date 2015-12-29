@@ -3,7 +3,7 @@ os: linux
 files:
     - source: /
       destination: /home/lotusinterworks.internal/codeDeploy/NewSimplia/Yahya
-      overwrite: yes
+#      overwrite: no
 hooks:
   BeforeInstall:
     - location: cleanup.sh
