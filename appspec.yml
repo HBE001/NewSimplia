@@ -3,7 +3,7 @@ os: linux
 files:
     - source: /
       destination: /home/lotusinterworks.internal/codeDeploy/NewSimplia
-      overwrite: yes
+#      overwrite: yes
 hooks:
   BeforeInstall:
     - location: cleanup.sh
