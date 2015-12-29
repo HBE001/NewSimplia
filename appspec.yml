@@ -2,8 +2,8 @@ version: 0.0
 os: linux
 files:
     - source: /
-      destination: /home/lotusinterworks.internal/codeDeploy/developers/NewSimplia
-#      overwrite: yes
+      destination: /home/lotusinterworks.internal/codeDeploy/NewSimplia/Yahya
+      overwrite: yes
 hooks:
   BeforeInstall:
     - location: cleanup.sh
