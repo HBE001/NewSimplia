@@ -1,5 +1,5 @@
 #!/bin/sh
-cd /home/lotusinterworks.internal/yahyas
-#sudo mv --backup=existing simpliadeployment simpliadeployment_old
-sudo rm -R simpliadeployment || true
-sudo rm -R simpliadeployment_old || true
+sudo mv --backup=existing /home/lotusinterworks.internal/yahyas/simpliadeployment /home/lotusinterworks.internal/yahyas/simpliadeployment_old || true
+#cd /home/lotusinterworks.internal/yahyas
+#sudo rm -R /home/lotusinterworks.internal/yahyas/simpliadeployment || true
+#sudo rm -R /home/lotusinterworks.internal/yahyas/simpliadeployment_old || true

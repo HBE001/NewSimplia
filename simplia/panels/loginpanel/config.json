@@ -1,7 +1,0 @@
-{
-  "name": "LoginPanel",
-  "js": "loginpanel/main.js",
-  "dependencies": [
-    "basicformdatatablepanel"
-  ]
-}

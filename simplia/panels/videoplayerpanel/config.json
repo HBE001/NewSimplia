@@ -1,7 +1,0 @@
-{
-  "name": "VideoPlayerPanel",
-  "html": "videoplayerpanel/videoplayerpanel.html",
-  "js": "videoplayerpanel/videoplayerpanel.js",
-  "dependencies": [
-  ]
-}

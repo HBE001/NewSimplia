@@ -1,8 +1,0 @@
-{
-  "name": "DynamoDBEditFormDatatablePanel",
-  "js": "dynamodbeditformdatatablepanel/dynamodbeditformdatatablepanel.js",
-  "dependencies": [
-    "dynamodbbasicdatabaseformdatatablepanel",
-    "whiteboardpanel"
-  ]
-}

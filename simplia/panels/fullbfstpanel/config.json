@@ -1,7 +1,0 @@
-{
-  "name": "FullBFSTPanel",
-  "html": "fullbfstpanel/fullbfstpanel.html",
-  "js": "fullbfstpanel/fullbfstpanel.js",
-  "dependencies": [
-  ]
-}

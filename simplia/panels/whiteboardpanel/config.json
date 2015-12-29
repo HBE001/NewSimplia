@@ -1,9 +1,0 @@
-{
-  "name": "WhiteBoardPanel",
-  "html": "whiteboardpanel/whiteboardpanel.html",
-  "js": "whiteboardpanel/whiteboardpanel.js",
-  "dependencies": [
-    "databasedatatablepanel",
-    "whiteboardchatpanel"
-  ]
-}
