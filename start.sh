@@ -8,5 +8,7 @@ sudo ./setup_nginx_debug_repo.sh SimpliaApp 3011 3012
 cd simplia
 #export NODE_PATH= ../node_modules
 export NODE_PATH=/usr/local/lib/node_modules
-sudo pm2 start /home/lotusinterworks.internal/yahyas/simpliadeployment/simplia/index.js --node-args="--debug=3012" --force
+sudo node --debug=3012 index.js
+#sudo pm2 start /home/lotusinterworks.internal/yahyas/simpliadeployment/simplia/index.js --node-args="--debug=3012" --force
+
 
