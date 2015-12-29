@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
     - source: /
-      destination: /home/lotusinterworks.internal/yahyas/NewSimplia
+      destination: /home/lotusinterworks.internal/codeDeploy/NewSimplia
 #      overwrite: no
 hooks:
   BeforeInstall:
