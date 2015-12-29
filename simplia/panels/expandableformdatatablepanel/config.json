@@ -1,0 +1,7 @@
+{
+  "name": "ExpandableFormDatatablePanel",
+  "js": "expandableformdatatablepanel/main.js",
+  "dependencies": [
+    "basicdatatablepanel"
+  ]
+}

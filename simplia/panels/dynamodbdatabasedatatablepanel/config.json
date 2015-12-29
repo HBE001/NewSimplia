@@ -1,0 +1,12 @@
+{
+  "name": "DynamodbDatabaseDatatablePanel",
+  "js": "dynamodbdatabasedatatablepanel/dynamodbdatabasedatatablepanel.js",
+  "dependencies": [
+    "basicdatatablepanel",
+    "dynamodbsettingsdatatablepanel",
+    "dynamodbaddformdatatablepanel",
+    "dynamodbeditformdatatablepanel",
+    "dynamodbviewformdatatablepanel",
+    "whiteboardpanel"
+  ]
+}

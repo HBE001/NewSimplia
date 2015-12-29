@@ -1,0 +1,8 @@
+{
+  "name": "DynamoDBViewFormDatatablePanel",
+  "js": "dynamodbviewformdatatablepanel/dynamodbviewformdatatablepanel.js",
+  "dependencies": [
+    "dynamodbbasicdatabaseformdatatablepanel",
+    "whiteboardpanel"
+  ]
+}

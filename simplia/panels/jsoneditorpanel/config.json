@@ -1,0 +1,7 @@
+{
+  "name": "JSONEditorPanel",
+  "html": "jsoneditorpanel/jsoneditorpanel.html",
+  "js": "jsoneditorpanel/jsoneditorpanel.js",
+  "dependencies": [
+  ]
+}

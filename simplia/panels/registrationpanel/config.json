@@ -1,0 +1,7 @@
+{
+  "name": "RegistrationPanel",
+  "js": "registrationpanel/main.js",
+  "dependencies": [
+    "basicformdatatablepanel"
+  ]
+}

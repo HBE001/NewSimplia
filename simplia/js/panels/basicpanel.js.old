@@ -1,0 +1,663 @@
+function BasicPanel(Y) {
+	this.panel = "";
+	this.Y	= Y;
+	this.mainPanelEvent = "panelevent";
+	this.rightMenu = "";
+	this.leftMenu = "";
+	this.checkboxMenu = "";
+	this.selectedRecord = "";
+	this.failCode = "fail";
+	this.passCode = "pass";
+    this.shareEventHandler = "";
+    this.acceptPanelEvents = false;
+    this.parsedFileData = {};
+    this.treeSource = [];
+    this.panelTitle = "";
+    this.panelEvent = "";
+
+    this.childPanels = {};
+
+    this.twilioTokenUrl = "http://nodejs.simplia.com/simplia/twilio/gettoken";
+}
+
+BasicPanel.prototype.init = function() {
+    this.createMainPanel(this.panelTitle);
+	this.createMenus();
+    this.setupMainPanelEventHandlers();
+    this.setupEventHandlers();
+    this.setupEvents();
+
+};
+
+BasicPanel.prototype.setupMainPanelEventHandlers = function() {
+    this.panel.after("visibleChange", function(e){
+        if(!e.newVal) {
+            Object.keys(this.childPanels).forEach(function(panelName) {
+                this[panelName].hidePanel();
+            },this.childPanels);
+        }
+    },this);
+};
+
+BasicPanel.prototype.setupEventHandlers = function() {
+    var that = this;
+    this.Y.on(this.messageEvent, function(data) {
+        if(that.acceptPanelEvents) {
+            that.handlePanelSharingEvent(data);
+        }
+    });
+};
+
+BasicPanel.prototype.getEventMousePosition = function(e) {
+	var _x;
+	var _y;
+	var isIE = document.all ? true : false;
+	
+	if (!isIE) {
+		_x = e.pageX;
+		_y = e.pageY;
+	}
+	if (isIE) {
+		_x = event.clientX + document.body.scrollLeft;
+		_y = event.clientY + document.body.scrollTop;
+	}
+	return [_x, _y];
+};
+
+
+BasicPanel.prototype.minimizePanel = function() {
+	var panelId = this.panel.get('srcNode').getAttribute('id');
+    var panelElem = $('#' + panelId );
+    panelElem.find('.yui3-widget-bd').hide();
+
+	if(panelElem.find('.arrowdown').is(':visible')) {
+        panelElem.find('.arrowup').toggle();
+        panelElem.find('.arrowdown').toggle();
+	}
+};
+
+BasicPanel.prototype.maximizePanel = function() {
+	var panelId = this.panel.get('srcNode').getAttribute('id');
+    var panelElem = $('#' + panelId );
+    panelElem.find('.yui3-widget-bd').show();
+	
+	if(panelElem.find('.arrowup').is(':visible')) {
+        panelElem.find('.arrowup').toggle();
+        panelElem.find('.arrowdown').toggle();
+	}
+};
+
+BasicPanel.prototype.togglePanelView = function() {
+	var panelId = this.panel.get('srcNode').getAttribute('id');
+    var panelElem = $('#' + panelId );
+    panelElem.find('.yui3-widget-bd').toggle();
+
+    panelElem.find('.arrowup').toggle();
+    panelElem.find('.arrowdown').toggle();
+};
+
+BasicPanel.prototype.createMenuTree = function(treeDiv) {
+	(function(main, tDiv) {
+	    $('#' + treeDiv).fancytree(
+				{
+					selectMode: 3,
+					icons: false,
+					click: function(event, data) {
+						if(data.targetType == "title") {
+							if(typeof main.handleTreeClick !== "undefined") {
+								main.handleTreeClick(event, data);
+							}
+							if(data.node.hasChildren()) {
+							
+								//var treeObj = data.node.tree;
+								var treeObj = $('#' + tDiv).fancytree("getTree");
+								treeObj.options.checkbox = treeObj.options.checkbox ? false : true;
+								treeObj.reload().done(function(){
+									$('#' + tDiv).fancytree("getTree").visit(function(node){
+										node.setExpanded(true);
+									});									
+								});
+							}
+							else {
+								$('#' + data.node.key).trigger("click");
+							}
+							return false;
+						}
+						
+					}
+				}			
+			);
+	})(this, treeDiv);
+    $('#' + treeDiv).fancytree("getTree").visit(function(node){
+    	node.setExpanded(true);
+    });
+};
+
+BasicPanel.prototype.createTreeFromData = function(data) {
+    console.log('createTreeFromData', data);
+    this.parseFileData(data.data.Items);
+    console.log('parsedFileData', this.parsedFileData);
+    this.treeSource = [];
+    this.treeSource = this.createTreeSource(this.parsedFileData);
+
+    console.log(this.treeSource);
+    var treeDiv = this.leftMenuTree;
+    (function(main, tDiv) {
+        $('#' + treeDiv).fancytree(
+            {
+                source: main.treeSource,
+                selectMode: 3,
+                icons: false,
+                click: function(event, data) {
+                    if(data.targetType == "title") {
+                        if(typeof main.handleTreeClick !== "undefined") {
+                            main.handleTreeClick(event, data);
+                        }
+                        if(data.node.hasChildren()) {
+
+                            //var treeObj = data.node.tree;
+                            var treeObj = $('#' + tDiv).fancytree("getTree");
+                            treeObj.options.checkbox = treeObj.options.checkbox ? false : true;
+                            treeObj.reload().done(function(){
+                                $('#' + tDiv).fancytree("getTree").visit(function(node){
+                                    node.setExpanded(true);
+                                });
+                            });
+                        }
+                        else {
+                            $('#' + data.node.key).trigger("click");
+                        }
+                        return false;
+                    }
+
+                }
+            }
+        );
+    })(this, treeDiv);
+    $('#' + treeDiv).fancytree("getTree").visit(function(node){
+        node.setExpanded(true);
+    });
+
+};
+
+BasicPanel.prototype.parseFileData = function(fileData) {
+    this.parsedFileData = {};
+    for(var i = 0; i < fileData.length; i++){
+        //console.log('path:' + fileData[i].fullpath);
+        var folderExp = /^([^\x7F]+)\x7F(.+)$/;
+        var pathNodes = [];
+        var matches = folderExp.exec(fileData[i].Edge.S);
+        if(matches) {
+            var lastObj = this.parsedFileData;
+            while (matches) {
+                //console.log('matches', matches);
+                //console.log('lastObj:', lastObj);
+                if (typeof lastObj[matches[1]] === "undefined") {
+                    //console.log('empty object for ' + matches[1]);
+                    lastObj[matches[1]] = {};
+                }
+                pathNodes.push(matches[1]);
+                var newObj = lastObj[matches[1]];
+                //console.log('newObj:', newObj );
+                var newMatches = folderExp.exec(matches[2]);
+                if (!newMatches) {
+                    //console.log(lastObj[matches[1]]);
+                    if (typeof lastObj[matches[1]].treeChildren === "undefined") {
+                        lastObj[matches[1]].treeChildren = new Array();
+                    }
+                    fileData[i].name = matches[2];
+                    fileData[i].paths = pathNodes;
+                    lastObj[matches[1]].treeChildren.push(fileData[i]);
+                }
+                lastObj = newObj;
+                //console.log('lastObj-end:', lastObj);
+                matches = newMatches
+            }
+        }
+    }
+    //console.log(this.parsedFileData);
+};
+
+BasicPanel.prototype.createTreeSource = function(node) {
+    var tree = [];
+    for (var i in node) {
+        if(i == 'treeChildren') {
+            for(var i = 0; i < node.treeChildren.length; i++) {
+                var nodeData = {"title": node.treeChildren[i].name, "key": node.treeChildren[i].Path.S};
+                //var nodeData = {"title": node.treeChildren[i].name, "key": node.treeChildren[i].fullpath};
+                tree.push(nodeData);
+            }
+        }
+        else {
+            var nodeData = {"title": i, "key": i, "folder": true, children: this.createTreeSource(node[i])};
+            tree.push(nodeData);
+        }
+    }
+
+    return tree;
+};
+
+BasicPanel.prototype.createLeftMenu = function() {
+    this.leftMenu = new this.Y.Panel({
+        //srcNode      : '#' + this.leftMenuName,
+        headerContent: '<div class="header-title">Action</div></div>',
+        bodyContent: '<div class="rightmenu-container"><ul></ul></div>',
+        zIndex       : 6,
+        centered     : true,
+        modal        : false,
+        visible      : false,
+        render       : true,
+        plugins      : [Y.Plugin.Drag]
+    });
+
+    //this.Y.socksMgr.addCallback('mainwebsocket', 'createtree', this, this.createTreeFromData);
+    //this.Y.socksMgr.getSocket('mainwebsocket').send(JSON.stringify({message: 'gettreedata', data: {username: 'mogopak', callback: 'createtree'}}));
+    //this.createMenuTree(this.leftMenuTree);
+    
+			
+
+    this.Y.one("#" + this.panel.get('id') + " .checklistmenuleft").on("click", function(e){
+        var pos = this.getEventMousePosition(e);
+
+        this.leftMenu.set("zIndex", this.panel.get("zIndex") + 1)
+        this.leftMenu.show();
+
+        var menuElem = this.Y.one("#" + this.leftMenu.get('id'));
+        
+        //Setting the css for Panel
+        this.Y.one(menuElem).setStyle('left', pos[0] +'px');
+        this.Y.one(menuElem).setStyle('top', pos[1] +'px');
+    },this);
+};
+
+BasicPanel.prototype.createRightMenu = function() {
+    this.rightMenu = new this.Y.Panel({
+        headerContent: '<div class="header-title">Action</div></div>',
+        bodyContent: '<div class="rightmenu-container"><ul></ul></div>',
+        //srcNode      : '#' + this.rightMenuName,
+        zIndex       : 6,
+        centered     : true,
+        modal        : false,
+        visible      : false,
+        render       : true,
+        plugins      : [Y.Plugin.Drag]
+    });
+	
+    this.Y.one("#" + this.panel.get('id') + " .checklistmenuright").on("click", function(e){
+        var pos = this.getEventMousePosition(e);
+
+        //Ensuring that the right menu option is displayed on top of the parent panel;
+        this.rightMenu.set("zIndex", this.panel.get("zIndex") + 1);
+        this.rightMenu.show();
+        
+        var menuElem = this.Y.one("#" + this.rightMenu.get('id'));
+        
+        //Setting the css for Panel
+        this.Y.one(menuElem).setStyle('left', pos[0] +'px');
+        this.Y.one(menuElem).setStyle('top', pos[1] +'px');
+    },this);
+};
+
+BasicPanel.prototype.addRightMenuItem = function(menuLabel, callback) {
+    var ulStr = "<li>" + menuLabel + "</li>";
+    var ulElem = $('#' + this.rightMenu.get('id')).find('.rightmenu-container ul');
+    var that = this;
+    $(ulStr).appendTo(ulElem).each(function(){
+        $(this).click(function(){
+            that.rightMenu.hide();
+            callback();
+        });
+    });
+};
+
+
+BasicPanel.prototype.createCheckboxMenu = function() {
+    this.checkboxMenu = new this.Y.Panel({
+        srcNode      : '#' + this.checkboxMenuName,
+        zIndex       : 6,
+        centered     : true,
+        modal        : false,
+        visible      : false,
+        render       : true,
+        plugins      : [Y.Plugin.Drag]
+    });	
+};
+
+BasicPanel.prototype.createMenus = function() {
+	this.createRightMenu();
+	this.setupRightMenu();
+	this.createLeftMenu();
+	this.setupLeftMenu();
+	this.createCheckboxMenu();
+	this.setupCheckboxMenu();
+};
+
+BasicPanel.prototype.setupCheckboxMenu = function() {
+	
+};
+
+BasicPanel.prototype.setupRightMenu = function() {
+	
+};
+
+BasicPanel.prototype.setupLeftMenu = function() {
+	
+};
+
+
+BasicPanel.prototype.createBasicPanel = function(name, buttonInfo, props) {
+	var panel = new this.Y.Panel({
+		srcNode 	: '#' + name,
+		width		: props['width'],
+        zIndex   	: 5,
+		modal       : true,
+	    visible     : false,
+		plugins 	: [this.Y.Plugin.Drag]
+	});
+	panel.setAttrs(props);
+
+	var button = "";
+	if($.isArray(buttonInfo)) {
+		button = {};
+		for(var i = 0; i < buttonInfo.length; i++) {
+			button[buttonInfo[i]] = new this.Y.Button({
+                srcNode: '#' + buttonInfo[i]
+            }).render();
+
+        }
+	}
+	else if(buttonInfo){
+		button = new this.Y.Button({
+			srcNode: '#' + buttonInfo
+		}).render();
+	}
+	
+	
+	panel.render();
+	return {panel: panel, button: button};
+};
+
+
+BasicPanel.prototype.showPanel = function() {
+	this.panel.show();
+};
+
+BasicPanel.prototype.hidePanel = function() {
+	this.panel.hide();
+};
+
+BasicPanel.prototype.createBasicDataTable = function(parentElem, panelTableName, res, props){
+	this.Y.one("#"+ parentElem).setHTML("");
+    this[panelTableName] = new this.Y.DataTable({
+        columns   : res.head,
+        data      : res.recd,
+        //sortable  : res.sortcol,
+        //recordType: res.recsort,
+        editable  : false,
+        allowHTML : true,
+        defaultEditor: 'inline',
+        editOpenType:  'click',
+        scrollable: "y",
+        width     : "100%"
+    }).render("#"+parentElem);	
+    if(typeof props !== "undefined") {
+    	this[panelTableName].setAttrs(props);
+    }
+
+    // To avoid checkbox click causing harmless error in sorting
+    this[panelTableName].detach('*:change');
+
+    // Delegated because the table header might be re-rendered
+    //Check all
+    (function(main) {
+	    main[panelTableName].delegate('click', function (e) {
+	        main.get('contentBox').all('input[name]')
+	            .set('checked', e.currentTarget.get('checked'));
+	            //alert(this.get('contentBox').all('input[name]').get('value'));
+	    }, '#id_all', main[panelTableName]);
+	
+	    main[panelTableName].delegate('click', function(e) {
+	    	main.selectRow(e, panelTableName);
+	    }, '.yui3-datatable-data tr');
+    })(this);
+
+};
+
+BasicPanel.prototype.refreshBasicDataTable = function(parentElem, panelTableName, res) {
+	this[panelTableName].set('columns', res.head);
+	this[panelTableName].set('data', res.recd);
+};
+
+BasicPanel.prototype.createDataTable = function() {
+	this.getDataTableData(this.createBasicDataTable);
+};
+
+BasicPanel.prototype.refreshDataTable = function() {
+	this.getDataTableData(this.refreshBasicDataTable);
+};
+
+BasicPanel.prototype.getDataTableData = function() {
+	
+};
+
+BasicPanel.prototype.selectRow = function(e, panelTableName){
+	this.Y.all('td').removeClass('yui3-datatable-selected');
+	e.currentTarget.all('td').addClass('yui3-datatable-selected');
+	var tdId = e.currentTarget.all('td').get('id');
+	var tdId = tdId.toString();
+
+	if(tdId != ''){
+		var tdIdstring = tdId.split(',');
+		for(i=0;i<tdIdstring.length;i++){
+			if(tdIdstring[i] != ''){
+				var idtd = tdIdstring[i];
+				break;
+			}
+		}
+		var tdClass = $('#'+idtd).attr("class");
+		var ci = 0;
+
+		if(tdClass != ''){
+			var pos = this.getEventMousePosition(e); 
+			this.selectedRecord = this[panelTableName].getRecord(idtd);
+			if($('#' + idtd).find("input:checkbox").prop('checked')) {
+				this.checkboxMenu.show();
+			}
+			var chp_varibleId = this.Y.one("#" + this.checkboxMenuName).ancestor();
+
+			//Setting the css for Panel
+			this.Y.one(chp_varibleId).setStyle('left', pos[0]+'px');
+			this.Y.one(chp_varibleId).setStyle('top', pos[1]+'px');
+		}
+	}
+};
+
+
+
+/*
+ * 
+ * 
+ * 
+ */
+BasicPanel.createViewToggle = function() {
+	$(document).on('click','.arrowup', function(e) {
+		$(this).parents('.yui3-panel').find('.yui3-widget-bd').toggle();
+		$(this).toggle();
+		$(this).parent().find('.arrowdown').toggle();
+	});
+	
+	$(document).on('click','.arrowdown', function(e) {
+		$(this).parents('.yui3-panel').find('.yui3-widget-bd').toggle();
+		$(this).toggle();
+		$(this).parent().find('.arrowup').toggle();
+	});
+};
+
+BasicPanel.prototype.enablePanelSharing = function() {
+    this.enableMouseMoveEvent();
+    this.enableMouseClickEvent();
+    this.enableKeyPressEvent();
+};
+
+BasicPanel.prototype.enableMouseMoveEvent = function() {
+    var that = this;
+    $('#' + this.panelName).mousemove(function(event) {
+        var panelElem = $('#' + that.panelName);
+        var x = event.pageX - panelElem.offset().left;
+        var y = event.pageY - panelElem.offset().top;
+        that.Y.socksMgr.getSocket('mainwebsocket').send(JSON.stringify({message: 'panel-movement-data', data: {panelname: that.panelClassName, event: 'mousemove', x: x, y: y}}));
+    });
+};
+
+BasicPanel.prototype.enableMouseClickEvent = function() {
+    var that = this;
+    $('#' + this.panelName).click(function(event) {
+        var panelElem = $('#' + that.panelName);
+        var x = event.pageX - panelElem.offset().left;
+        var y = event.pageY - panelElem.offset().top;
+        var elem = $(document.elementFromPoint(event.pageX, event.pageY));
+        console.log(elem);
+        that.Y.socksMgr.getSocket('mainwebsocket').send(JSON.stringify({message: 'panel-movement-data', data: {panelname: that.panelClassName, event: 'click', x: x, y: y, elem: elem.attr('id')}}));
+    });
+};
+
+BasicPanel.prototype.enableKeyPressEvent = function() {
+    var that = this;
+    $('#' + this.panelName).keypress(function(event) {
+        var panelElem = $('#' + that.panelName);
+        var x = event.pageX - panelElem.offset().left;
+        var y = event.pageY - panelElem.offset().top;
+        that.Y.socksMgr.getSocket('mainwebsocket').send(JSON.stringify({message: 'panel-movement-data', data: {panelname: that.panelClassName, event: 'keypress', which: event.which}}));
+    });
+};
+
+
+BasicPanel.prototype.disablePanelSharing = function() {
+    $('#' + this.panelName).off("mousemove click");
+};
+
+BasicPanel.prototype.acceptPanelSharing = function() {
+    this.acceptPanelEvents = true;
+};
+
+BasicPanel.prototype.stopAcceptingPanelSharing = function() {
+    this.acceptPanelEvents = false;
+    $('#cursor-img').hide();
+};
+
+BasicPanel.prototype.handlePanelSharingEvent = function(data) {
+    switch(data.event) {
+        case 'mousemove':
+            this.handleMouseMoveEvent(data);
+            break;
+        case 'click':
+            this.handleMouseClickEvent(data);
+            break;
+        case 'keypress':
+            this.handleKeyPressEvent(data);
+            break;
+    }
+};
+
+BasicPanel.prototype.handleMouseMoveEvent = function(data) {
+    var panelElem = $('#' + this.panelName);
+    var newx = panelElem.offset().left + data.x;
+    var newy = panelElem.offset().top + data.y;
+    $('#cursor-img').show().css('z-index',99999).offset({top: newy, left: newx});
+
+};
+
+BasicPanel.prototype.handleMouseClickEvent = function(data) {
+    var cursorImg = $('#cursor-img');
+    cursorImg.hide();
+
+    var panelElem = $('#' + this.panelName);
+    var newx = panelElem.offset().left + data.x;
+    var newy = panelElem.offset().top + data.y;
+
+    var clickElem = $('#' + data.elem);
+    if(clickElem.is('input')) {
+        clickElem.focus().click();
+    }
+    else {
+        var elem = $(document.elementFromPoint(newx, newy));
+        console.log('click');
+        console.log(elem);
+        elem.focus().click();
+    }
+
+    cursorImg.show();
+};
+
+BasicPanel.prototype.handleKeyPressEvent = function(data) {
+    var cursorImg = $('#cursor-img');
+    cursorImg.hide();
+
+    var panelElem = $('#' + this.panelName);
+    var elem = $(document.activeElement);
+    console.log(elem);
+    switch(data.which) {
+        case 8:
+            elem.val(elem.val().slice(0,-1));
+            break;
+
+        default:
+            elem.focus().val(elem.val() + String.fromCharCode(data.which));
+            break;
+    }
+
+
+    cursorImg.show();
+};
+
+BasicPanel.prototype.createMainPanel = function(title, width, height) {
+    this.panel = new this.Y.Panel({
+        headerContent: '<div class="header-title"><span class="alignleft"><span class="alignleft mainpanel_option checklistmenuleft">&#9776;&nbsp;&nbsp;</span></span>' + title +
+                        '<span class="alignleft"><span class="alignleft mainpanel_option"><span class="arrow"><span class="arrowup" style="display:none;">&#9650;</span>' +
+                        '<span class="arrowdown">&#9660;</span></span></span></span><span class="panelsalignright checklistmenuright">&#9776;</span></div>',
+        zIndex   	: 5,
+        modal      	: false,
+        visible    	: false,
+        centered 	: false,
+        render		: true,
+        buttons     : [],
+        plugins : [this.Y.Plugin.Drag]
+    });
+
+    //Adding the CSS class to enable the header to take up all the available space as there is no close button
+    $('#' + this.panel.get('id') + ' .yui3-widget-hd').addClass('simplia-panel-header');
+
+    if(typeof width !== "undefined" && width) {
+        this.panel.set('width', width);
+    }
+
+    if(typeof height !== "undefined" && height) {
+        this.panel.set('height', height);
+    }
+    this.panel.centered();
+};
+
+
+BasicPanel.prototype.getScript = function(url, cb) {
+    $.getScript( url )
+        .done(function( script, textStatus ) {
+            cb();
+        })
+        .fail(function( jqxhr, settings, exception ) {
+            console.log('error');
+        });
+};
+
+BasicPanel.prototype.setupEvents = function() {
+    var that = this;
+    this.Y.on(this.panelEvent, function (data) {
+        eval('that.' + data.fn + '(data.fnData)');
+    });
+};
+
+BasicPanel.prototype.bringToTop = function(otherPanel) {
+    this.panel.set("zIndex", otherPanel.panel.get("zIndex") + 1);
+};
+
+
+BasicPanel.createViewToggle();

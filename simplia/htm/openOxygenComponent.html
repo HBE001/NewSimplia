@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Open Oxygen Component</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <script src="./js/bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="./js/bower_components/async/lib/async.js" type="text/javascript"></script>
+    <script src="./js/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="./js/jquery.smoothDivScroll.js" type="text/javascript"></script>
+    <!-- Stock Ticker smooth div js -->
+    <script src="./js/jquery.slimscroll.js" type="text/javascript"></script>
+    <!-- Stock slim scrollerjs -->
+    <script src="./js/jquery.validate.min.js"></script>
+    <script src="./js/jquery.fancytree.js" type="text/javascript"></script>
+    <!-- Fancy tree javascript -->
+    <script src="./js/jquery.autocomplete.js" type="text/javascript"></script>
+    <!-- Auto complete javascript -->
+    <script src="./js/js.cookies.js" type="text/javascript"></script>
+    <script src="./js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+
+
+    <script type="text/javascript" src="./js/geoip2.js"></script>
+    <script type="text/javascript" src="./js/yui-3.18.js"></script>
+    <script type="text/javascript" src="./js/updates.js"></script>
+    <script type="text/javascript" src="./js/paneleventmanager.js"></script>
+    <script type="text/javascript" src="./js/screenmanager.js"></script>
+    <script type="text/javascript" src="./js/panelloader.js"></script>
+    <script type="text/javascript" src="./js/menus/basicmenu.js"></script>
+    <script type="text/javascript" src="./js/menus/rightmenu.js"></script>
+    <script type="text/javascript" src="./js/menus/leftmenu.js"></script>
+    <script type="text/javascript" src="./js/panels/basicpanel.js"></script>
+    <script type="text/javascript" src="./js/lotuswebsockets.js"></script>
+    <script type="text/javascript" src="./js/communicationmanager.js"></script>
+
+    <link rel="stylesheet" href="./css/pure.css">
+    <link rel="stylesheet" href="./css/custom.css">
+    <link rel="stylesheet" href="./css/ui.fancytree.css">
+    <link rel="stylesheet" href="./css/marketing.css">
+    <link rel="stylesheet" href="./css/font-awesome.css">
+
+    <script>
+        var Y;
+        var currentPanel;
+
+
+        var getUrlParameter = function (sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                    sURLVariables = sPageURL.split('&'),
+                    sParameterName,
+                    i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };
+
+        var defineYUI = function (displayName) {
+            Y = YUI().use(
+                    "yui",
+                    "event",
+                    "event-custom",
+                    "datatable",
+                    "datatable-base",
+                    "datatable-sort",
+                    "datatable-scroll",
+                    "datatable-mutable",
+                    "datatable-column-widths",
+                    'datasource-jsonschema',
+                    'datatable-datasource',
+                    'gallery-datatable-checkbox-select',
+                    'gallery-datatable-celleditor-popup',
+                    'datasource',
+                    'button',
+                    'json',
+                    "io",
+                    'datasource-io',
+                    "cssbutton",
+                    "overlay",
+                    "panel",
+                    "dd-plugin",
+                    "node",
+                    "array-extras",
+                    "querystring-stringify",
+                    "gallery-notify",
+                    "event-hover",
+                    "handlebars",
+                    "gallery-uuid",
+                    "resize-base",
+                    "resize-constrain",
+                    "resize-plugin",
+                    function (Y) {
+                        //Perform an update to fix problems, including a problem with the CheckboxSelect module
+                        doUpdates(Y);
+                        Y.notify = new Y.Notify();
+                        Y.notify.render();
+                        Y.socksMgr = new LotusWebsockets(Y);
+                        Y.peManager = new PanelEventManager(Y);
+                        Y.cManager = new CommunicationManager(Y);
+                        Y.screenManager = new ScreenManager(Y);
+
+                        var config = {
+                            name: 'mainwebsocket',
+                            url: Y.socksMgr.createSocketURL('/socket'),
+                            onmessage: Y.cManager.handleMessage,
+                            onmsgscope: Y.cManager,
+                            onopen: function () {
+                                var properties = {
+                                    panelTitle: displayName,
+                                    tableName: "OxygenComponents",
+                                    gdn_parameter: displayName
+                                };
+                                Y.screenManager.initializePanel("DynamoFourColumnFormPanel", properties, function (error, panel) {
+                                    if (error) {
+                                        console.log(error);
+                                    }
+                                    else {
+                                        currentPanel = panel;
+                                        panel.showPanel();
+                                    }
+                                });
+                            }
+                        };
+                        Y.socksMgr.setupSocket(config);
+                    });
+        };
+
+        var loadComponent = function (displayName) {
+            console.log("Loading Component");
+            if (Y == undefined || currentPanel == undefined) {
+                defineYUI(displayName);
+            } else {
+                var data = {
+                    tableName: "OxygenComponents",
+                    data: JSON.stringify({DisplayName: displayName})
+                };
+                $.ajax({
+                    dataType: "json",
+                    type: "POST",
+                    url: "./metadata/open",
+                    data: $.param(data),
+                    success: function (loaded_data) {
+                        console.log("Open Response is here");
+                        console.log(loaded_data);
+                        currentPanel.refreshDatatable(undefined, loaded_data.data);
+                    }
+                });
+            }
+        };
+
+        $(document).ready(function (e) {
+            $.ajax({
+                dataType: "json",
+                type: "POST",
+                url: "./metadata/getAllGDN",
+                data: $.param({tableName: "OxygenComponents", type: getUrlParameter('type')}),
+                success: function (GDNs) {
+                    $('.dynamictable').append('<table border = "1" style="border:1px solid #000; background: #CCC;"></table>');
+                    var table = $('.dynamictable').children();
+                    GDNs.forEach(function (item) {
+                        table.append("<tr><td style='padding: 15px; border: 1px solid #DDD;'>" +
+                                "<a style='color: #000000;' href='javascript:void(0);' onclick='loadComponent(\""
+                                + item.DisplayName + "\")' target='_blank'>" + item.DisplayName + "</a>" +
+                                "</td></tr>");
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+
+<body class="yui3-skin-sam">
+
+<div class="dynamictable" style="float: left;"></div>
+</body>
+</html>
+

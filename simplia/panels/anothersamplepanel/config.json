@@ -1,0 +1,7 @@
+{
+  "name": "AnotherSamplePanel",
+  "html": "anothersamplepanel/main.html",
+  "js": "anothersamplepanel/main.js",
+  "dependencies": [
+  ]
+}

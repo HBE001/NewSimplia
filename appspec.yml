@@ -1,0 +1,16 @@
+version: 0.0
+os: linux
+files:
+    - source: /
+      destination: /home/lotusinterworks.internal/yahyas/simpliadeployment
+      overwrite: yes
+hooks:
+  BeforeInstall:
+    - location: cleanup.sh
+      runas: root
+  AfterInstall:
+    - location: stop.sh
+      runas: root
+  ApplicationStart:
+    - location: start.sh
+      runas: root

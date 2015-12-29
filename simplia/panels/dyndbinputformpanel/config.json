@@ -1,0 +1,8 @@
+{
+  "name": "DynDBInputFormPanel",
+  "js": "dyndbinputformpanel/main.js",
+  "dependencies": [
+    "basicformdatatablepanel",
+    "jsoneditorpanel"
+  ]
+}

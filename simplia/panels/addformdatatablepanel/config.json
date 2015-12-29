@@ -1,0 +1,8 @@
+{
+  "name": "AddFormDatatablePanel",
+  "js": "addformdatatablepanel/addformdatatablepanel.js",
+  "dependencies": [
+    "basicdatabaseformdatatablepanel",
+    "whiteboardpanel"
+  ]
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
+    <title>JSON EDITOR</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.21.min.js"></script>
+    <script src="./js/sunny_jsoneditor.js"></script>
+
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+    <link href="./css/sunny_jsoneditor.css" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+        .editor {
+            width: 33%;
+            height: 500px;
+            float: left;
+        }
+
+        .save {
+            float: right;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div style="padding-top: 20px;">
+    <div class="codeEditor editor"></div>
+    <div class="htmlEditor editor"></div>
+    <div class="cssEditor editor"></div>
+</div>
+
+<button class="btn  btn-info save saveApp">Save To Application</button>
+<button class="btn  btn-info save saveDraft">Save as Draft</button>
+
+<script>
+    AWS.config.update({
+        accessKeyId: "AKIAJOYNV4TNAS7HDVJQ",
+        secretAccessKey: "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",
+        region: "us-east-1",
+        apiVersions: {
+            s3: '2006-03-01'
+        }
+    });
+    var s3 = new AWS.S3();
+
+    var codeEditor = new JSONEditor($('.codeEditor')[0]);
+    codeEditor.setMode('code');
+    codeEditor.focus();
+
+    var htmlEditor = new JSONEditor($('.htmlEditor')[0]);
+    htmlEditor.setMode('code');
+
+    var cssEditor = new JSONEditor($('.cssEditor')[0]);
+    cssEditor.setMode('code');
+
+    $('.saveApp').on('click', function () {
+        var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        var value = editor.getText();
+
+        var params = {
+            Bucket: 'allc.ip611.com/Developer_Panel/Saved_App', /* required */
+            Key: guid, /* required */
+            Body: JSON.stringify(value),
+            ContentType: 'json',
+            ACL: 'public-read'
+        };
+
+        s3.putObject(params, function (err, data) {
+            if (err) {
+                console.log(err, err.stack);
+            }
+            else {
+                console.log(data);
+            }
+        });
+    });
+
+    $('.saveDraft').on('click', function () {
+        var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        var value = editor.getText();
+
+        var params = {
+            Bucket: 'allc.ip611.com/Developer_Panel/Saved_JSONs', /* required */
+            Key: guid, /* required */
+            Body: JSON.stringify(value),
+            ContentType: 'json',
+            ACL: 'public-read'
+        };
+
+        s3.putObject(params, function (err, data) {
+            if (err) {
+                console.log(err, err.stack);
+            }
+            else {
+                console.log(data);
+            }
+        });
+    });
+
+    //        var uploadPath = 'http://allc.ip611.com.s3.amazonaws.com/Developer_Panel/Saved_JSONs/' + guid + ".json";
+    //        console.log(uploadPath);
+    //        $.ajax({
+    //            type: "PUT",
+    //            url: uploadPath,
+    //            dataType: 'json',
+    //            data: JSON.stringify({"value": value, "ACL": 'public-read', "GrantFullControl": 'Everyone'})
+    //        }).success(function (data) {
+    //            console.log("Done = ", data);
+    //        });
+</script>
+</body>
+</html>
+

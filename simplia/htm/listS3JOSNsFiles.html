@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- when using the mode "code", it's important to specify charset utf-8 -->
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <!--Jquery plugin-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+
+    <!--Jsoneditor plugin-->
+    <link href="./css/sunny_jsoneditor.css" rel="stylesheet" type="text/css">
+    <script src="./js/sunny_jsoneditor.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.21.min.js"></script>
+    <title>Saved JSONs</title>
+
+    <style type="text/css">
+        .editor {
+            width: 450px;
+            height: 300px;
+        }
+
+        .msg {
+            color: darkred;
+            text-decoration: solid;
+            font-size: xx-large;
+        }
+
+    </style>
+</head>
+<body>
+<script type="text/javascript">
+    AWS.config.accessKeyId = 'AKIAJOYNV4TNAS7HDVJQ';
+    AWS.config.secretAccessKey = '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';
+    AWS.config.region = 'us-east-1';
+    //        var bucket = new AWS.S3({params: {Bucket: 'allc.ip611.com/', Prefix: 'Developer_Panel/Saved_JSONs/'}});
+    var docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
+
+    var params = {
+        Item: {
+            Id: guid,
+            data: editor.get(),
+        },
+        TableName: "JsonEditor"
+    };
+
+    docClient.put(params, function (err, data) {
+        if (err) {
+            console.log("Error", err);
+        }
+        else {
+            console.log("data", data);
+        }
+    });
+
+
+    //    var bucket = new AWS.S3({params: {Bucket: 'allc.ip611.com/', Prefix: 'Developer_Panel/Saved_JSONs/'}});
+    //    bucket.listObjects(function (err, data) {
+    //        if (err) {
+    //            console.log(err)
+    //            document.getElementById('status').innerHTML =
+    //                    'Could not load objects from S3';
+    //        } else {
+    //            document.getElementById('status').innerHTML =
+    //                    'Loaded ' + data.Contents.length + ' items from S3';
+    //            for (var i = 0; i < data.Contents.length; i++) {
+    //                document.getElementById('objects').innerHTML +=
+    //                        '<li>' + data.Contents[i].Key + '</li>';
+    //            }
+    //        }
+    //    });
+
+    var loadComponent = function (displayName) {
+        console.log("Loading Component");
+        if (Y == undefined || currentPanel == undefined) {
+            defineYUI(displayName);
+        } else {
+            var data = {
+                tableName: "OxygenComponents",
+                data: JSON.stringify({DisplayName: displayName})
+            };
+            $.ajax({
+                dataType: "json",
+                type: "POST",
+                url: "./metadata/open",
+                data: $.param(data),
+                success: function (loaded_data) {
+                    console.log("Open Response is here");
+                    console.log(loaded_data);
+                    currentPanel.refreshDatatable(undefined, loaded_data.data);
+                }
+            });
+        }
+    };
+
+    $(document).ready(function (e) {
+        $.ajax({
+            dataType: "json",
+            type: "POST",
+            url: "./metadata/getAllGDN",
+            data: $.param({tableName: "OxygenComponents", type: getUrlParameter('type')}),
+            success: function (GDNs) {
+                $('.dynamictable').append('<table border = "1" style="border:1px solid #000; background: #CCC;"></table>');
+                var table = $('.dynamictable').children();
+                GDNs.forEach(function (item) {
+                    table.append("<tr><td style='padding: 15px; border: 1px solid #DDD;'>" +
+                            "<a style='color: #000000;' href='javascript:void(0);' onclick='loadComponent(\""
+                            + item.DisplayName + "\")' target='_blank'>" + item.DisplayName + "</a>" +
+                            "</td></tr>");
+                });
+            }
+        });
+    });
+
+
+</script>
+
+</body>
+</html>

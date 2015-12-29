@@ -1,0 +1,10 @@
+{
+  "name": "BasicFourColumnFormDataTablePanel",
+  "js": "basicfourcolumnformdatatablepanel/basicfourcolumnformdatatablepanel.js",
+  "dependencies": [
+    "basicdatatablepanel",
+    "jsoneditorpanel",
+    "oxygencomponentsviewpanel",
+    "contextviewerpanel"
+  ]
+}

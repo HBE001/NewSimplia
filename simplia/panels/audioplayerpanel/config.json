@@ -1,0 +1,7 @@
+{
+  "name": "AudioPlayerPanel",
+  "html": "audioplayerpanel/audioplayerpanel.html",
+  "js": "audioplayerpanel/audioplayerpanel.js",
+  "dependencies": [
+  ]
+}

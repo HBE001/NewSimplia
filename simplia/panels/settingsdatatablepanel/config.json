@@ -1,0 +1,8 @@
+{
+  "name": "SettingsDatatablePanel",
+  "js": "settingsdatatablepanel/settingsdatatablepanel.js",
+  "dependencies": [
+    "basicdatatablepanel",
+    "whiteboardpanel"
+  ]
+}

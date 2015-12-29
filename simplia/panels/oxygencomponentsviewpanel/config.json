@@ -1,0 +1,8 @@
+{
+  "name": "OxygenComponentsViewPanel",
+  "html": "oxygencomponentsviewpanel/oxygencomponentsviewpanel.html",
+  "js": "oxygencomponentsviewpanel/oxygencomponentsviewpanel.js",
+  "dependencies": [
+    "contextviewerpanel"
+  ]
+}

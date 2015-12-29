@@ -1,0 +1,8 @@
+{
+  "name": "BFSTPanel",
+  "html": "bfstpanel/bfstpanel.html",
+  "js": "bfstpanel/bfstpanel.js",
+  "dependencies": [
+    "jsoneditorpanel"
+  ]
+}

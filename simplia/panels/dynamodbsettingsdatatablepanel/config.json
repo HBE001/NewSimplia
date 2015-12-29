@@ -1,0 +1,8 @@
+{
+  "name": "DynamoDBSettingsDatatablePanel",
+  "js": "dynamodbsettingsdatatablepanel/dynamodbsettingsdatatablepanel.js",
+  "dependencies": [
+    "basicdatatablepanel",
+    "whiteboardpanel"
+  ]
+}

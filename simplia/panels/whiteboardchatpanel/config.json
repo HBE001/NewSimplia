@@ -1,0 +1,7 @@
+{
+  "name": "WhiteBoardChatPanel",
+  "html": "whiteboardchatpanel/whiteboardchatpanel.html",
+  "js": "whiteboardchatpanel/whiteboardchatpanel.js",
+  "dependencies": [
+  ]
+}

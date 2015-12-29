@@ -1,0 +1,9 @@
+{
+  "name": "DynamoFourColumnFormPanel",
+  "js": "dynamofourcolumnformpanel/dynamofourcolumnformpanel.js",
+  "dependencies": [
+    "basicfourcolumnformdatatablepanel",
+    "dynamofourcolumnsettingspanel",
+    "jsoneditorpanel"
+  ]
+}

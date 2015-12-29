@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
+    <title>Open Saved JSONs</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.21.min.js"></script>
+    <script src="./js/sunny_jsoneditor.js"></script>
+
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+    <link href="./css/sunny_jsoneditor.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<div class="status"></div>
+<div class="dynamictable" style="float: left;"></div>
+<script>
+    AWS.config.apiVersions = {
+        s3: '2006-03-01'
+    };
+
+    AWS.config.update({
+        accessKeyId: "AKIAJOYNV4TNAS7HDVJQ",
+        secretAccessKey: "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",
+        "region": "us-east-1"
+    });
+
+    var s3 = new AWS.S3();
+    var prefix;
+
+    var loadComponent = function (itemKey) {
+        var params = {
+            Bucket: 'allc.ip611.com',
+            Key: itemKey
+        };
+
+        s3.getObject(params, function (err, data) {
+            if (err) {
+                console.log(err, err.stack);
+            } else {
+//                try {
+                console.log("loaded Item = ", JSON.parse(data.Body));
+                console.log("Trimed Data = ", JSON.parse((data.Body + "").replace(/(\r\n|\n|\r)/gm,"")));
+                loadedObject = JSON.parse((data.Body + "").replace(/(\r\n|\n|\r)/gm,""));
+
+                if (loadedObject.html != undefined) {
+                    if (typeof loadedObject.html == 'string') {
+                        $(loadedObject.html).appendTo('body');
+                        console.log("BODY Document = ", $('body'));
+                    }
+                } else {
+                    console.log("Append HTML is undefined");
+                }
+
+                if (loadedObject.loadBucket != undefined) {
+                    if (typeof loadedObject.loadBucket == 'string') {
+                        loadBucket(loadedObject.loadBucket);
+                    } else if (loadedObject.loadBucket instanceof Array) {
+                        loadedObject.loadBucket.forEach(function (link) {
+                            loadBucket(link);
+                        });
+                    }
+                } else {
+                    console.log("loadBucket undefined ");
+                }
+
+                if (loadedObject.externalStyle != undefined) {
+                    if (typeof loadedObject.externalStyle == 'string') {
+                        loadStyle(loadedObject.externalStyle);
+                    } else if (loadedObject.externalStyle instanceof Array) {
+                        loadedObject.externalStyle.forEach(function (link) {
+                            loadStyle(link);
+                        });
+                    }
+                } else {
+                    console.log("externalStyle undefined ");
+                }
+
+                if (loadedObject.externalLink != undefined) {
+                    if (typeof loadedObject.externalLink == 'string') {
+                        loadScript(loadedObject.externalLink, function () {
+                            runScript(loadedObject.code);
+                        });
+                    } else if (loadedObject.externalLink instanceof Array) {
+                        loadedObject.externalLink.forEach(function (link) {
+                            loadScript(link);
+                        });
+                    }
+                } else {
+                    console.log("externalLink undefined ");
+                    runScript(loadedObject.code);
+                }
+
+//                runScript(loadedObject.code);
+//                }
+//                catch (e) {
+//                    console.log('invalid json');
+//                }
+            }
+        });
+    };
+
+    var loadScript = function (externalLink, callback) {
+        if (externalLink != undefined) {
+            $.getScript(externalLink, function () {
+                console.log("Got Script = ", externalLink);
+                if (callback != undefined)
+                    callback();
+            });
+        }
+    }
+
+    var loadStyle = function (externalLink) {
+        if (externalLink != undefined) {
+            $.get(externalLink, function (css) {
+                $('<style type="text/css"></style>')
+                        .html(css)
+                        .appendTo("head");
+            });
+        }
+    }
+
+    var loadBucket = function (bucketName, callback) {
+        if (bucketName != undefined) {
+            var params = {
+                Bucket: 'allc.ip611.com/',
+                Prefix: bucketName
+            };
+
+            s3.listObjects(params, function (err, data) {
+                if (err) {
+                    console.log(err);
+                    $('.status').html('Could not load objects from S3');
+                } else {
+                    $('.status').html('Loaded ' + data.Contents.length + ' items from S3');
+                    loadDynamicly(data.Contents);
+                }
+            });
+
+
+            var loadDynamicly = function (loadedItems) {
+                $('.dynamictable').append('<table border = "1" style="border:1px solid #000; background: #CCC;"></table>');
+                var table = $('.dynamictable').children();
+                loadedItems.forEach(function (item) {
+                    loadComponent(item.Key)
+                });
+            }
+        }
+    }
+
+    var runScript = function (code) {
+        if (code != undefined) {
+            eval(code);
+        }
+    }
+
+    $(document).ready(function (e) {
+        prefix = 'Developer_Panel/Saved_App/';
+
+        var params = {
+            Bucket: 'allc.ip611.com/',
+            Prefix: prefix
+        };
+
+
+        s3.listObjects(params, function (err, data) {
+            if (err) {
+                console.log(err);
+                $('.status').html('Could not load objects from S3');
+            } else {
+                $('.status').html('Loaded ' + data.Contents.length + ' items from S3');
+                loadDynamicly(data.Contents);
+            }
+        });
+
+
+        var loadDynamicly = function (loadedItems) {
+            $('.dynamictable').append('<table border = "1" style="border:1px solid #000; background: #CCC;"></table>');
+            var table = $('.dynamictable').children();
+            loadedItems.forEach(function (item) {
+                table.append("<tr><td style='padding: 15px; border: 1px solid #DDD;'>" +
+                        "<a style='color: #000000;' href='javascript:void(0);' onclick='loadComponent(\""
+                        + item.Key + "\")' target='_blank'>" + item.Key.replace(prefix, "") + "</a>" +
+                        "</td></tr>");
+            });
+        }
+    });
+
+</script>
+</body>
+</html>
+

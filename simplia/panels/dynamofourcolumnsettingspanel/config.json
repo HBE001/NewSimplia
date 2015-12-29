@@ -1,0 +1,8 @@
+{
+  "name": "DynamoFourColumnSettingsPanel",
+  "js": "dynamofourcolumnsettingspanel/dynamofourcolumnsettingspanel.js",
+  "dependencies": [
+    "basicdatatablepanel",
+    "whiteboardpanel"
+  ]
+}

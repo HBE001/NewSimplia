@@ -1,0 +1,10 @@
+{
+  "name": "MediaPlayerPanel",
+  "html": "mediaplayerpanel/mediaplayerpanel.html",
+  "js": "mediaplayerpanel/mediaplayerpanel.js",
+  "dependencies": [
+    "whiteboardpanel",
+    "videoplayerpanel",
+    "audioplayerpanel"
+  ]
+}
