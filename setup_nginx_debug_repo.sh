@@ -27,5 +27,5 @@ server {
 
 EOM
 
-sudo /usr/bin/sudo service nginx restart
+/usr/bin/sudo service nginx restart
 #sudo service nginx restart
