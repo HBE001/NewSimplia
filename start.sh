@@ -10,4 +10,4 @@ cp -rf simplia_update/* simplia/
 cd simplia
 export NODE_PATH=/usr/local/lib/node_modules
 #pm2 start /home/lotusinterworks.internal/codeDeploy/NewSimplia/simplia/index.js --node-args="--debug=3012" --force --name "NewSimplia_Simplia"
-sudo node --debug=3012 index.js
+node --debug=3012 index.js
