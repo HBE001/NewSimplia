@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PATH="/home/lotusinterworks.internal/codeDeploy/nginx_debug_repos_conf/"
+PATH="/home/lotusinterworks.internal/nginx_debug_repos_conf/"
 #PATH="/home/lotusinterworks.internal/yahyas/nginx_debug_repos_conf/"
 
 REPO=$1;
@@ -9,6 +9,8 @@ LOCAL_DEBUG_PORT=$3;
 
 
 FILE=$PATH$REPO".conf"
+
+touch $FILE;
 
 /bin/cat <<EOM >$FILE
 

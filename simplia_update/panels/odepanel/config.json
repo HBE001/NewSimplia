@@ -1,0 +1,5 @@
+{
+  "name": "ODEPanel",
+  "html": "odepanel/main.html",
+  "js": "odepanel/main.js"
+}
